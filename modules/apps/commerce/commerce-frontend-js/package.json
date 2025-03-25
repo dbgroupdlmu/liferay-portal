@@ -1,0 +1,65 @@
+{
+	"dependencies": {
+		"@clayui/alert": "3.111.0",
+		"@clayui/autocomplete": "3.120.0",
+		"@clayui/button": "3.116.0",
+		"@clayui/core": "3.120.0",
+		"@clayui/data-provider": "3.119.0",
+		"@clayui/drop-down": "3.120.0",
+		"@clayui/form": "3.119.0",
+		"@clayui/icon": "3.111.0",
+		"@clayui/label": "3.111.0",
+		"@clayui/layout": "3.111.0",
+		"@clayui/list": "3.120.0",
+		"@clayui/loading-indicator": "3.111.0",
+		"@clayui/modal": "3.119.0",
+		"@clayui/multi-select": "3.120.0",
+		"@clayui/pagination-bar": "3.120.0",
+		"@clayui/panel": "3.119.0",
+		"@clayui/popover": "3.119.0",
+		"@clayui/shared": "3.119.0",
+		"@clayui/sticker": "3.111.0",
+		"@clayui/table": "3.111.0",
+		"@clayui/tooltip": "3.119.0",
+		"@liferay/cookies-banner-web": "*",
+		"@liferay/frontend-data-set-web": "*",
+		"@liferay/frontend-js-react-web": "*",
+		"@liferay/frontend-js-state-web": "*",
+		"classnames": "2.3.1",
+		"frontend-js-web": "*",
+		"prop-types": "15.7.2",
+		"react": "16.12.0",
+		"react-dom": "16.12.0"
+	},
+	"devDependencies": {
+		"faker": "^5.1.0",
+		"fetch-mock": "5.13.1",
+		"html-webpack-plugin": "5.5.0",
+		"webpack": "5.76.0"
+	},
+	"jest": {
+		"collectCoverageFrom": [
+			"!<rootDir>/node_modules/",
+			"<rootDir>/src/**/components/**/*.js",
+			"<rootDir>/src/**/ServiceProvider/composeAPI.js",
+			"<rootDir>/src/**/utilities/**/*.js",
+			"!<rootDir>/src/**/constants.js",
+			"!<rootDir>/src/**/entry.js"
+		],
+		"testPathIgnorePatterns": [
+			"<rootDir>/test/components/MiniCart",
+			"<rootDir>/test/tests_utilities/"
+		]
+	},
+	"main": "index.js",
+	"name": "commerce-frontend-js",
+	"private": true,
+	"scripts": {
+		"build": "node-scripts build",
+		"checkFormat": "node-scripts format --check",
+		"coverage": "node-scripts test --coverage --silent --verbose",
+		"format": "node-scripts format",
+		"test": "node-scripts test"
+	},
+	"version": "4.0.123"
+}

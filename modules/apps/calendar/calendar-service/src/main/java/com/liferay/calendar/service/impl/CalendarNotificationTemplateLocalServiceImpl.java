@@ -1,0 +1,142 @@
+/**
+ * SPDX-FileCopyrightText: (c) 2000 Liferay, Inc. https://liferay.com
+ * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
+ */
+
+package com.liferay.calendar.service.impl;
+
+import com.liferay.calendar.model.Calendar;
+import com.liferay.calendar.model.CalendarNotificationTemplate;
+import com.liferay.calendar.notification.NotificationTemplateType;
+import com.liferay.calendar.notification.NotificationType;
+import com.liferay.calendar.service.base.CalendarNotificationTemplateLocalServiceBaseImpl;
+import com.liferay.calendar.service.persistence.CalendarPersistence;
+import com.liferay.portal.aop.AopService;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.SystemEventConstants;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.UserLocalService;
+import com.liferay.portal.kernel.systemevent.SystemEvent;
+
+import java.util.Date;
+import java.util.List;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+
+/**
+ * @author Adam Brandizzi
+ * @author Marcellus Tavares
+ */
+@Component(
+	property = "model.class.name=com.liferay.calendar.model.CalendarNotificationTemplate",
+	service = AopService.class
+)
+public class CalendarNotificationTemplateLocalServiceImpl
+	extends CalendarNotificationTemplateLocalServiceBaseImpl {
+
+	@Override
+	public CalendarNotificationTemplate addCalendarNotificationTemplate(
+			long userId, long calendarId, NotificationType notificationType,
+			String notificationTypeSettings,
+			NotificationTemplateType notificationTemplateType, String subject,
+			String body, ServiceContext serviceContext)
+		throws PortalException {
+
+		User user = _userLocalService.getUser(userId);
+		Calendar calendar = _calendarPersistence.findByPrimaryKey(calendarId);
+		Date date = new Date();
+
+		long calendarNotificationTemplateId = counterLocalService.increment();
+
+		CalendarNotificationTemplate calendarNotificationTemplate =
+			calendarNotificationTemplatePersistence.create(
+				calendarNotificationTemplateId);
+
+		calendarNotificationTemplate.setUuid(serviceContext.getUuid());
+		calendarNotificationTemplate.setGroupId(calendar.getGroupId());
+		calendarNotificationTemplate.setCompanyId(user.getCompanyId());
+		calendarNotificationTemplate.setUserId(user.getUserId());
+		calendarNotificationTemplate.setUserName(user.getFullName());
+		calendarNotificationTemplate.setCreateDate(
+			serviceContext.getCreateDate(date));
+		calendarNotificationTemplate.setModifiedDate(
+			serviceContext.getModifiedDate(date));
+		calendarNotificationTemplate.setCalendarId(calendarId);
+		calendarNotificationTemplate.setNotificationType(
+			notificationType.getValue());
+		calendarNotificationTemplate.setNotificationTypeSettings(
+			notificationTypeSettings);
+		calendarNotificationTemplate.setNotificationTemplateType(
+			notificationTemplateType.getValue());
+		calendarNotificationTemplate.setSubject(subject);
+		calendarNotificationTemplate.setBody(body);
+
+		return calendarNotificationTemplatePersistence.update(
+			calendarNotificationTemplate);
+	}
+
+	@Override
+	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
+	public CalendarNotificationTemplate deleteCalendarNotificationTemplate(
+		CalendarNotificationTemplate calendarNotificationTemplate) {
+
+		return calendarNotificationTemplatePersistence.remove(
+			calendarNotificationTemplate);
+	}
+
+	@Override
+	public void deleteCalendarNotificationTemplates(long calendarId) {
+		List<CalendarNotificationTemplate> calendarNotificationTemplates =
+			calendarNotificationTemplatePersistence.findByCalendarId(
+				calendarId);
+
+		for (CalendarNotificationTemplate calendarNotificationTemplate :
+				calendarNotificationTemplates) {
+
+			calendarNotificationTemplateLocalService.
+				deleteCalendarNotificationTemplate(
+					calendarNotificationTemplate);
+		}
+	}
+
+	@Override
+	public CalendarNotificationTemplate fetchCalendarNotificationTemplate(
+		long calendarId, NotificationType notificationType,
+		NotificationTemplateType notificationTemplateType) {
+
+		return calendarNotificationTemplatePersistence.fetchByC_NT_NTT(
+			calendarId, notificationType.getValue(),
+			notificationTemplateType.getValue());
+	}
+
+	@Override
+	public CalendarNotificationTemplate updateCalendarNotificationTemplate(
+			long calendarNotificationTemplateId,
+			String notificationTypeSettings, String subject, String body,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		CalendarNotificationTemplate calendarNotificationTemplate =
+			calendarNotificationTemplatePersistence.findByPrimaryKey(
+				calendarNotificationTemplateId);
+
+		calendarNotificationTemplate.setModifiedDate(
+			serviceContext.getModifiedDate(null));
+		calendarNotificationTemplate.setNotificationTypeSettings(
+			notificationTypeSettings);
+		calendarNotificationTemplate.setSubject(subject);
+		calendarNotificationTemplate.setBody(body);
+
+		return calendarNotificationTemplatePersistence.update(
+			calendarNotificationTemplate);
+	}
+
+	@Reference
+	private CalendarPersistence _calendarPersistence;
+
+	@Reference
+	private UserLocalService _userLocalService;
+
+}

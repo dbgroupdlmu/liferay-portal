@@ -1,0 +1,1011 @@
+/**
+ * SPDX-FileCopyrightText: (c) 2000 Liferay, Inc. https://liferay.com
+ * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
+ */
+
+import {expect, mergeTests} from '@playwright/test';
+
+import {apiHelpersTest} from '../../fixtures/apiHelpersTest';
+import {applicationsMenuPageTest} from '../../fixtures/applicationsMenuPageTest';
+import {featureFlagsTest} from '../../fixtures/featureFlagsTest';
+import {fragmentsPagesTest} from '../../fixtures/fragmentPagesTest';
+import {isolatedSiteTest} from '../../fixtures/isolatedSiteTest';
+import {loginTest} from '../../fixtures/loginTest';
+import {pageEditorPagesTest} from '../../fixtures/pageEditorPagesTest';
+import {pageManagementSiteTest} from '../../fixtures/pageManagementSiteTest';
+import {pageViewModePagesTest} from '../../fixtures/pageViewModePagesTest';
+import {checkAccessibility} from '../../utils/checkAccessibility';
+import {clickAndExpectToBeVisible} from '../../utils/clickAndExpectToBeVisible';
+import createUserWithPermissions from '../../utils/createUserWithPermissions';
+import {expandSection} from '../../utils/expandSection';
+import getRandomString from '../../utils/getRandomString';
+import {hoverAndExpectToBeVisible} from '../../utils/hoverAndExpectToBeVisible';
+import {performUserSwitch} from '../../utils/performLogin';
+import {closeProductMenu, openProductMenu} from '../../utils/productMenu';
+import getBasicWebContentStructureId from '../../utils/structured-content/getBasicWebContentStructureId';
+import {journalPagesTest} from '../journal-web/fixtures/journalPagesTest';
+import getFragmentDefinition from './utils/getFragmentDefinition';
+import getPageDefinition from './utils/getPageDefinition';
+
+const test = mergeTests(
+	apiHelpersTest,
+	applicationsMenuPageTest,
+	featureFlagsTest({
+		'LPS-169837': true,
+		'LPS-178052': true,
+	}),
+	fragmentsPagesTest,
+	isolatedSiteTest,
+	journalPagesTest,
+	loginTest(),
+	pageEditorPagesTest,
+	pageManagementSiteTest,
+	pageViewModePagesTest
+);
+
+const PANELS: SidebarTab[] = [
+	'Fragments and Widgets',
+	'Browser',
+	'Page Design Options',
+	'Page Rules',
+	'Page Content',
+	'Comments',
+];
+
+test('Renders all panel buttons in the vertical bar', async ({
+	apiHelpers,
+	page,
+	pageEditorPage,
+	site,
+}) => {
+	await page.goto('/');
+
+	// Create page and go to edit mode
+
+	const layout = await apiHelpers.headlessDelivery.createSitePage({
+		siteId: site.id,
+		title: getRandomString(),
+	});
+
+	await pageEditorPage.goto(layout, site.friendlyUrlPath);
+
+	// Check all panel buttons are rendered
+
+	for (const panel of PANELS) {
+		const panelButton = page.getByLabel(panel, {exact: true});
+
+		await expect(panelButton).toBeVisible();
+		await expect(panelButton).toHaveAttribute(
+			'aria-selected',
+			panel === PANELS[0] ? 'true' : 'false'
+		);
+	}
+});
+
+test('Renders sidebars visible at desktop size and sidebars not visible at small resolutions', async ({
+	apiHelpers,
+	page,
+	pageEditorPage,
+	site,
+}) => {
+	await page.goto('/');
+
+	// Create content page and go to edit mode
+
+	const layout = await apiHelpers.headlessDelivery.createSitePage({
+		siteId: site.id,
+		title: getRandomString(),
+	});
+
+	await pageEditorPage.goto(layout, site.friendlyUrlPath);
+
+	const panel = page.getByLabel('Fragments and Widgets Panel');
+	const configurationPanel = page.getByLabel('Configuration Panel', {
+		exact: true,
+	});
+
+	await expect(panel).toBeVisible();
+
+	await expect(configurationPanel).toBeVisible();
+
+	// Set small resolution and check panels are not visible
+
+	await page.setViewportSize({height: 600, width: 600});
+
+	await panel.waitFor({state: 'hidden'});
+
+	await expect(panel).not.toBeVisible();
+
+	await expect(configurationPanel).not.toBeVisible();
+});
+
+test('Checks if sidebars are open or closed depending on Product Menu', async ({
+	apiHelpers,
+	page,
+	pageEditorPage,
+	site,
+}) => {
+	await page.goto('/');
+
+	// Create content page and go to edit mode
+
+	const layout = await apiHelpers.headlessDelivery.createSitePage({
+		siteId: site.id,
+		title: getRandomString(),
+	});
+
+	await pageEditorPage.goto(layout, site.friendlyUrlPath);
+
+	// Check panels are visible
+
+	const panel = page.getByLabel('Fragments and Widgets Panel');
+	const configurationPanel = page.getByLabel('Configuration Panel', {
+		exact: true,
+	});
+
+	// Check if sidebars are not visible when Product Menu is open
+
+	await panel.waitFor({state: 'visible'});
+
+	await openProductMenu(page);
+
+	await expect(panel).not.toBeVisible();
+
+	await expect(configurationPanel).not.toBeVisible();
+
+	// Check if sidebars are visible when Product Menu is closed
+
+	await closeProductMenu(page);
+
+	await expect(panel).toBeVisible();
+
+	await expect(configurationPanel).toBeVisible();
+});
+
+test('Checks sidebar accessibility', async ({
+	apiHelpers,
+	page,
+	pageEditorPage,
+	site,
+}) => {
+
+	// Create page and go to edit mode
+
+	const layout = await apiHelpers.headlessDelivery.createSitePage({
+		siteId: site.id,
+		title: getRandomString(),
+	});
+
+	await pageEditorPage.goto(layout, site.friendlyUrlPath);
+
+	// Check where the focus goes when the sidebar is closed
+
+	await page.getByRole('button', {name: 'Close'}).press('Enter');
+
+	await expect(
+		page.getByLabel('Fragments and Widgets', {exact: true})
+	).toBeFocused();
+
+	// Check with axe
+
+	await checkAccessibility({
+		page,
+		selectors: ['.page-editor__sidebar'],
+	});
+});
+
+test.describe('Fragments Panel', () => {
+	test('Only published fragments are shown in the Fragments Sidebar', async ({
+		apiHelpers,
+		fragmentsPage,
+		page,
+		pageEditorPage,
+		pageManagementSite,
+	}) => {
+
+		// Create unpublished fragment inside Page Management fragment set
+
+		await fragmentsPage.goto(pageManagementSite.friendlyUrlPath);
+
+		const unpublishedFragmentName = getRandomString();
+
+		await fragmentsPage.createFragment(
+			'Page Management Fragments',
+			unpublishedFragmentName
+		);
+
+		// Create content page and go to edit mode
+
+		const layout = await apiHelpers.headlessDelivery.createSitePage({
+			pageDefinition: getPageDefinition(),
+			siteId: pageManagementSite.id,
+			title: getRandomString(),
+		});
+
+		await pageEditorPage.goto(layout, pageManagementSite.friendlyUrlPath);
+
+		// Check only published fragment is displayed
+
+		await pageEditorPage.goToSidebarTab('Fragments and Widgets');
+
+		await page
+			.getByRole('menuitem', {
+				exact: true,
+				name: 'Page Management Fragments',
+			})
+			.click();
+
+		await expect(page.getByText('Apple')).toBeVisible();
+
+		await expect(page.getByText(unpublishedFragmentName)).not.toBeVisible();
+
+		// Check that the new set appears in the last position
+
+		const lastFragmentSet = page
+			.getByLabel('Fragments', {exact: true})
+			.locator('.panel-header')
+			.last();
+
+		await expect(lastFragmentSet).toContainText(
+			'Page Management Fragments'
+		);
+
+		// Delete unpublished fragment
+
+		await fragmentsPage.goto(pageManagementSite.friendlyUrlPath);
+
+		await fragmentsPage.gotoFragmentSet('Page Management Fragments');
+
+		await fragmentsPage.deleteFragment(unpublishedFragmentName);
+	});
+
+	test('Can remove search text when pressing backspace', async ({
+		apiHelpers,
+		page,
+		pageEditorPage,
+		site,
+	}) => {
+
+		// Create content page and go to edit mode
+
+		const layout = await apiHelpers.headlessDelivery.createSitePage({
+			siteId: site.id,
+			title: getRandomString(),
+		});
+
+		await pageEditorPage.goto(layout, site.friendlyUrlPath);
+
+		// Open the "Fragments and Widgets" panel
+
+		await pageEditorPage.goToSidebarTab('Fragments and Widgets');
+
+		// Find the search input and type some text
+
+		const searchInput = page.getByPlaceholder('Search...');
+
+		await searchInput.fill('Heading');
+
+		// Verify the search text is present
+
+		await expect(searchInput).toHaveValue('Heading');
+
+		// Press Backspace to remove the text
+
+		await searchInput.press('Backspace');
+
+		// Verify the search text has been removed
+
+		await expect(searchInput).toHaveValue('Headin');
+	});
+
+	test('Favorite section is empty when there are no favorites', async ({
+		apiHelpers,
+		page,
+		pageEditorPage,
+		site,
+	}) => {
+
+		// Create content page and go to edit mode
+
+		const layout = await apiHelpers.headlessDelivery.createSitePage({
+			siteId: site.id,
+			title: getRandomString(),
+		});
+
+		await pageEditorPage.goto(layout, site.friendlyUrlPath);
+
+		// Open the "Fragments and Widgets" panel
+
+		await pageEditorPage.goToSidebarTab('Fragments and Widgets');
+
+		// Assert favorite section is empty
+
+		await expect(
+			page.getByRole('menuitem', {name: 'Favorites'})
+		).not.toBeVisible();
+	});
+
+	test(
+		'A widget marked as favorite in a content page is also marked in a widget page',
+		{tag: '@LPS-161732'},
+		async ({apiHelpers, page, pageEditorPage, site, widgetPagePage}) => {
+
+			// Create content page and go to edit mode
+
+			const layout = await apiHelpers.headlessDelivery.createSitePage({
+				siteId: site.id,
+				title: getRandomString(),
+			});
+
+			await pageEditorPage.goto(layout, site.friendlyUrlPath);
+
+			// Go to the Widget tab a select one widget as favorite
+
+			await pageEditorPage.goToSidebarTab('Fragments and Widgets');
+
+			await page.getByRole('tab', {exact: true, name: 'Widgets'}).click();
+
+			let highlightedSet = page
+				.locator('.page-editor__collapse')
+				.filter({hasText: 'Highlighted'});
+
+			await highlightedSet.waitFor();
+
+			const favoriteButton = page.getByTitle(
+				'Mark Reports Display as Favorite'
+			);
+
+			// If the widget is already marked as favorite, unmark it
+
+			if ((await favoriteButton.count()) > 1) {
+				await favoriteButton.first().click();
+
+				expect(favoriteButton).toHaveCount(1);
+			}
+
+			await favoriteButton.click();
+
+			// Check that the widget is inside Highlighted set
+
+			await expect(highlightedSet).toContainText('Reports Display');
+
+			// Create a Widget page and check that the widget is also inside Highlighted set in a widget page
+
+			const widgetLayout =
+				await apiHelpers.jsonWebServicesLayout.addLayout({
+					groupId: site.id,
+					title: getRandomString(),
+				});
+
+			await widgetPagePage.goto(widgetLayout, site.friendlyUrlPath);
+
+			await widgetPagePage.openAddPanel();
+
+			highlightedSet = page.locator('.panel', {hasText: 'Highlighted'});
+
+			await expect(highlightedSet).toContainText('Reports Display');
+
+			// Check that a new user with update permissions cannot see the changes
+
+			const company =
+				await apiHelpers.jsonWebServicesCompany.getCompanyByWebId(
+					'liferay.com'
+				);
+
+			const user = await createUserWithPermissions({
+				apiHelpers,
+				rolePermissions: [
+					{
+						actionIds: ['UPDATE'],
+						primaryKey: company.companyId,
+						resourceName: 'com.liferay.portal.kernel.model.Layout',
+						scope: 1,
+					},
+				],
+			});
+
+			await performUserSwitch(page, user.alternateName);
+
+			await widgetPagePage.goto(widgetLayout, site.friendlyUrlPath);
+
+			await widgetPagePage.openAddPanel();
+
+			await expect(highlightedSet).not.toContainText('Reports Display');
+		}
+	);
+
+	test('Fragment and widget sets are reordered', async ({
+		apiHelpers,
+		page,
+		pageEditorPage,
+		site,
+		widgetPagePage,
+	}) => {
+		const moveSet = async (setTitle: string) => {
+
+			// Move the set 2 positions down
+
+			await page.getByLabel(setTitle, {exact: true}).press('Enter');
+
+			await page.keyboard.press('ArrowDown');
+
+			await page.keyboard.press('ArrowDown');
+
+			await page.keyboard.press('ArrowDown');
+
+			await page.keyboard.press('Enter');
+		};
+
+		// Create content page and go to edit mode
+
+		const layout = await apiHelpers.headlessDelivery.createSitePage({
+			siteId: site.id,
+			title: getRandomString(),
+		});
+
+		await pageEditorPage.goto(layout, site.friendlyUrlPath);
+
+		// Open the "Fragments and Widgets" and get the first set of fragments
+
+		await pageEditorPage.goToSidebarTab('Fragments and Widgets');
+
+		const tabpanel = page
+			.locator('.page-editor__sidebar__fragments-widgets-panel')
+			.getByRole('tabpanel');
+
+		const fragmentSets = tabpanel.first().locator('.panel-header');
+
+		const firstFragmentSet = await fragmentSets.first().textContent();
+
+		// Got to the Widgets tab and get the first set of widgets
+
+		await page.getByRole('tab', {exact: true, name: 'Widgets'}).click();
+
+		await page.getByText('Highlighted').waitFor();
+
+		let widgetSets = tabpanel
+			.last()
+			.locator('.panel-header', {hasNotText: 'Highlighted'});
+
+		const firstWidgetSet = await widgetSets.first().textContent();
+
+		// Open "Reorder Sets" modal and reorder the first set of fragments
+
+		await page.getByTitle('Reorder Sets', {exact: true}).click();
+
+		const modal = page.locator('.modal-body');
+
+		await modal
+			.getByText('Fragments and widgets sets can be ordered')
+			.waitFor();
+
+		await moveSet(firstFragmentSet);
+
+		// Go to the Widget tab and reorder the first set
+
+		await modal.getByRole('tab', {exact: true, name: 'Widgets'}).click();
+
+		await modal.getByText(firstWidgetSet).waitFor();
+
+		await moveSet(firstWidgetSet);
+
+		// Save
+
+		await page.getByText('Save', {exact: true}).click();
+
+		await pageEditorPage.waitForChangesSaved();
+
+		// Check that the position of the first widget set has changed
+
+		await expect(widgetSets.nth(2)).toContainText(firstWidgetSet);
+
+		// Go back to the Fragments tab and check that the position of the first fragment has changed
+
+		await page.getByRole('tab', {exact: true, name: 'Fragments'}).click();
+
+		await expect(fragmentSets.nth(2)).toContainText(firstFragmentSet);
+
+		// Refresh the page and check that order is maintained
+
+		await pageEditorPage.goto(layout, site.friendlyUrlPath);
+
+		await expect(fragmentSets.nth(2)).toContainText(firstFragmentSet);
+
+		await page.getByRole('tab', {exact: true, name: 'Widgets'}).click();
+
+		await expect(widgetSets.nth(2)).toContainText(firstWidgetSet);
+
+		// Create a Widget page and check that the order is maintained on the widget page
+
+		const widgetLayout = await apiHelpers.jsonWebServicesLayout.addLayout({
+			groupId: site.id,
+			title: getRandomString(),
+		});
+
+		await widgetPagePage.goto(widgetLayout, site.friendlyUrlPath);
+
+		await widgetPagePage.openAddPanel();
+
+		widgetSets = page.locator('.sidebar-body__add-panel .panel-header', {
+			hasNotText: 'Highlighted',
+		});
+
+		await expect(widgetSets.nth(2)).toContainText(firstWidgetSet);
+
+		// Check that a new user with update permissions cannot see the changes
+
+		const company =
+			await apiHelpers.jsonWebServicesCompany.getCompanyByWebId(
+				'liferay.com'
+			);
+
+		const user = await createUserWithPermissions({
+			apiHelpers,
+			rolePermissions: [
+				{
+					actionIds: ['UPDATE'],
+					primaryKey: company.companyId,
+					resourceName: 'com.liferay.portal.kernel.model.Layout',
+					scope: 1,
+				},
+			],
+		});
+
+		await performUserSwitch(page, user.alternateName);
+
+		await widgetPagePage.goto(widgetLayout, site.friendlyUrlPath);
+
+		await widgetPagePage.openAddPanel();
+
+		[
+			'Accounts',
+			'Business Intelligence & Reporting',
+			'Collaboration',
+			'Commerce',
+			'Community',
+			'Content Management',
+			'News',
+			'Object',
+			'Sample',
+			'Search',
+		].forEach(async (set, index) => {
+			await expect(widgetSets.nth(index)).toContainText(set);
+		});
+	});
+
+	test(
+		'Save interactions with the panel when the page is refresh',
+		{tag: '@LPS-76741'},
+		async ({apiHelpers, page, pageEditorPage, site}) => {
+
+			// Create content page and go to edit mode
+
+			const layout = await apiHelpers.headlessDelivery.createSitePage({
+				siteId: site.id,
+				title: getRandomString(),
+			});
+
+			await pageEditorPage.goto(layout, site.friendlyUrlPath);
+
+			// Change the view of the fragments to Cards
+
+			await pageEditorPage.goToSidebarTab('Fragments and Widgets');
+
+			const firstSetList = page
+				.locator('.page-editor__collapse ul')
+				.first();
+
+			await expect(firstSetList).toHaveClass(
+				/page-editor__fragments-widgets__tab-collection-list/
+			);
+
+			await page.getByTitle('Switch to Card View').click();
+
+			// Open Cookie Banner collapse
+
+			const menuDisplayFragmentSet = page.getByRole('menuitem', {
+				exact: true,
+				name: 'Cookie Banner',
+			});
+
+			await expect(menuDisplayFragmentSet).toHaveClass(/collapsed/);
+
+			await menuDisplayFragmentSet.click();
+
+			// Refresh the page and check that everything remains the same
+
+			await pageEditorPage.goto(layout, site.friendlyUrlPath);
+
+			await pageEditorPage.goToSidebarTab('Fragments and Widgets');
+
+			await expect(firstSetList).toHaveClass(
+				/page-editor__fragments-widgets__tab-collection-cards/
+			);
+
+			await expect(menuDisplayFragmentSet).not.toHaveClass(/collapsed/);
+
+			// Reset the panel
+
+			await page.getByTitle('Switch to List View').click();
+
+			await menuDisplayFragmentSet.click();
+		}
+	);
+
+	test(
+		'Move the list fragment from its boundary and check that it is disabled when dragging',
+		{tag: '@LPS-130964'},
+		async ({apiHelpers, page, pageEditorPage, site}) => {
+
+			// Create content page and go to edit mode
+
+			const layout = await apiHelpers.headlessDelivery.createSitePage({
+				siteId: site.id,
+				title: getRandomString(),
+			});
+
+			await pageEditorPage.goto(layout, site.friendlyUrlPath);
+
+			// Go to the Fragments and Widget panel
+
+			await pageEditorPage.goToSidebarTab('Fragments and Widgets');
+
+			const fragment = page
+				.locator('.page-editor__fragments-widgets__tab-list-item')
+				.filter({hasText: 'External Video'});
+
+			await fragment.hover();
+
+			// Drag the list fragment from its coordinates 0,0 and check that it is disabled when dragging
+
+			const fragmentBox = await fragment.boundingBox();
+
+			await page.mouse.move(fragmentBox.x, fragmentBox.y);
+
+			await page.mouse.down();
+
+			await page
+				.getByText('Drag and drop fragments or widgets here.')
+				.hover();
+
+			await expect(fragment).toHaveClass(/disabled/);
+		}
+	);
+
+	test(
+		'Correct message is displayed when adding a removed fragment',
+		{tag: '@LPD-39508'},
+		async ({apiHelpers, page, pageEditorPage, site}) => {
+
+			// Create a fragment set with a fragment
+
+			const collectionName = getRandomString();
+
+			const {fragmentCollectionId} =
+				await apiHelpers.jsonWebServicesFragmentCollection.addFragmentCollection(
+					{
+						groupId: site.id,
+						name: collectionName,
+					}
+				);
+
+			const fragmentName = getRandomString();
+
+			await apiHelpers.jsonWebServicesFragmentEntry.addFragmentEntry({
+				fragmentCollectionId,
+				groupId: site.id,
+				html: '<div class="fragment-name">Fragment Example</div>',
+				name: fragmentName,
+				type: 'component',
+			});
+
+			// Create content page and go to edit mode
+
+			const layout = await apiHelpers.headlessDelivery.createSitePage({
+				siteId: site.id,
+				title: getRandomString(),
+			});
+
+			await pageEditorPage.goto(layout, site.friendlyUrlPath);
+
+			// Delete the fragment set
+
+			await apiHelpers.jsonWebServicesFragmentCollection.deleteFragmentCollection(
+				fragmentCollectionId
+			);
+
+			// Try to add the fragment
+
+			await pageEditorPage.goToSidebarTab('Fragments and Widgets');
+
+			const header = page.getByRole('menuitem', {
+				exact: true,
+				name: collectionName,
+			});
+
+			await expandSection(header);
+
+			await page.getByLabel(`Add ${fragmentName}`).focus();
+
+			await page.keyboard.press('Enter');
+			await page.keyboard.press('Enter');
+
+			await expect(
+				page.getByText(
+					'Error:The fragment can no longer be added because it has been deleted.',
+					{exact: true}
+				)
+			).toBeVisible();
+		}
+	);
+});
+
+test.describe('Page Contents Panel', () => {
+	test('Allows editing inline text from Page Content Panel', async ({
+		apiHelpers,
+		page,
+		pageEditorPage,
+		site,
+	}) => {
+
+		// Create a page with a Heading fragment
+
+		const headingId = getRandomString();
+		const headingDefinition = getFragmentDefinition({
+			id: headingId,
+			key: 'BASIC_COMPONENT-heading',
+		});
+
+		const layout = await apiHelpers.headlessDelivery.createSitePage({
+			pageDefinition: getPageDefinition([headingDefinition]),
+			siteId: site.id,
+			title: getRandomString(),
+		});
+
+		// Go to edit mode of page
+
+		await pageEditorPage.goto(layout, site.friendlyUrlPath);
+
+		// Go to Page Contents panel
+
+		await pageEditorPage.goToSidebarTab('Page Content');
+
+		// Hover the content and check that the fragment is hovered
+
+		const content = page.getByLabel('Edit Text Heading Example');
+
+		await content.hover();
+
+		const headingFragment = page.locator('.component-heading');
+
+		await expect(headingFragment).toHaveClass(
+			/page-editor__editable--content-hovered/
+		);
+
+		// Edit inline text
+
+		await content.click();
+
+		const editable = pageEditorPage.getEditable({
+			editableId: 'element-text',
+			fragmentId: headingId,
+		});
+
+		await editable.locator('.cke_editable_inline').waitFor();
+
+		// Clear current content text and fill with new one
+
+		await page.keyboard.press('Control+KeyA');
+		await page.keyboard.press('Backspace');
+
+		await page.keyboard.type('New Content');
+		await page.locator('body').click();
+
+		await pageEditorPage.waitForChangesSaved();
+
+		await expect(
+			page.locator('.page-editor__page-contents__page-content')
+		).toContainText('New Content');
+	});
+
+	test(
+		'Allows editing mapped asset from Page Content Panel',
+		{tag: ['@LPS-125985', '@LPS-122396']},
+		async ({apiHelpers, journalPage, page, pageEditorPage, site}) => {
+
+			// Create a page with a Heading fragment
+
+			const headingId = getRandomString();
+			const headingDefinition = getFragmentDefinition({
+				id: headingId,
+				key: 'BASIC_COMPONENT-heading',
+			});
+
+			const layout = await apiHelpers.headlessDelivery.createSitePage({
+				pageDefinition: getPageDefinition([headingDefinition]),
+				siteId: site.id,
+				title: getRandomString(),
+			});
+
+			// Create basic web content
+
+			const basicWebContentTitle = getRandomString();
+
+			await apiHelpers.jsonWebServicesJournal.addWebContent({
+				ddmStructureId: await getBasicWebContentStructureId(apiHelpers),
+				groupId: site.id,
+				titleMap: {en_US: basicWebContentTitle},
+			});
+
+			// Go to edit mode of page and map the editable to te BWC
+
+			await pageEditorPage.goto(layout, site.friendlyUrlPath);
+
+			await page.getByText('Heading Example', {exact: true}).waitFor();
+
+			await pageEditorPage.selectEditable(headingId, 'element-text');
+
+			await pageEditorPage.setMappedItem({
+				entity: 'Web Content',
+				entry: basicWebContentTitle,
+				field: 'Title',
+			});
+
+			// Check asset info appears in mapping panel
+
+			const typeLabel = page
+				.getByLabel('Configuration Panel')
+				.locator('.page-editor__mapping-panel__type-label');
+
+			await expect(typeLabel.nth(0)).toContainText(
+				'Content Type:Web Content Article'
+			);
+
+			await expect(typeLabel.nth(1)).toContainText(
+				'Subtype:Basic Web Content'
+			);
+
+			// Go to Page Contents panel and edit web content from there
+
+			await pageEditorPage.goToSidebarTab('Page Content');
+
+			const panel = page.getByLabel('Page Content Panel');
+
+			const content = panel.locator(
+				'.page-editor__page-contents__page-content'
+			);
+
+			await expect(async () => {
+				await hoverAndExpectToBeVisible({
+					autoClick: true,
+					target: content.getByLabel(
+						`Actions for ${basicWebContentTitle}`
+					),
+					trigger: content,
+				});
+
+				await page
+					.getByRole('menuitem', {
+						name: 'Edit',
+					})
+					.waitFor();
+
+				await page
+					.getByRole('menuitem', {
+						name: 'Edit',
+					})
+					.click();
+
+				await expect(
+					page.locator('.article-content-content')
+				).toBeVisible({
+					timeout: 500,
+				});
+			}).toPass();
+
+			await page.getByLabel('Select a language').waitFor();
+
+			const newTitle = getRandomString();
+
+			await journalPage.articleTitleInput.fill(newTitle);
+
+			await clickAndExpectToBeVisible({
+				target: page.locator('.page-editor'),
+				timeout: 1000,
+				trigger: page
+					.locator('.journal-article-button-row')
+					.getByRole('button', {name: 'Publish'}),
+			});
+
+			// Check new title is displayed in page editor
+
+			await expect(page.getByText(newTitle)).toBeVisible();
+		}
+	);
+});
+
+test.describe('Page Design Options', () => {
+	test(
+		'Allows editing inline text from Page Content Panel',
+		{
+			tag: '@LPS-146373',
+		},
+		async ({apiHelpers, page, pageEditorPage, site}) => {
+
+			// Create a page
+
+			const layout = await apiHelpers.headlessDelivery.createSitePage({
+				siteId: site.id,
+				title: getRandomString(),
+			});
+
+			// Go to edit mode of page
+
+			await pageEditorPage.goto(layout, site.friendlyUrlPath);
+
+			// Go to Page Contents panel
+
+			await pageEditorPage.goToSidebarTab('Page Design Options');
+
+			// Go to look and feel
+
+			await page
+				.getByTitle('More Page Design Options', {exact: true})
+				.click();
+
+			// Assert sections
+
+			await expect(
+				page.getByRole('heading', {name: 'Theme'})
+			).toBeAttached();
+
+			await expect(
+				page.getByRole('heading', {name: 'Basic Settings'})
+			).toBeAttached();
+
+			await expect(
+				page.getByRole('heading', {name: 'Customization'})
+			).toBeAttached();
+		}
+	);
+});
+
+test.describe('Rules Panel', () => {
+	test('Checks the accessibility of the rule modal by filling out a condition and an action', async ({
+		apiHelpers,
+		page,
+		pageEditorPage,
+		site,
+	}) => {
+
+		// Create content page with a Heading fragment and go to edit mode
+
+		const layout = await apiHelpers.headlessDelivery.createSitePage({
+			pageDefinition: getPageDefinition([
+				getFragmentDefinition({
+					id: getRandomString(),
+					key: 'BASIC_COMPONENT-heading',
+				}),
+			]),
+			siteId: site.id,
+			title: getRandomString(),
+		});
+
+		await pageEditorPage.goto(layout, site.friendlyUrlPath);
+
+		// Add rule and check accessibility of modal
+
+		await pageEditorPage.goToSidebarTab('Page Rules');
+
+		await page.getByRole('button', {name: 'New Rule'}).click();
+
+		await pageEditorPage.addRuleCondition();
+
+		await pageEditorPage.addRuleAction();
+
+		await checkAccessibility({
+			page,
+			selectors: ['.modal-body'],
+		});
+	});
+});

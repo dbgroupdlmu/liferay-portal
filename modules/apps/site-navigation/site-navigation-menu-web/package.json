@@ -1,0 +1,16 @@
+{
+	"dependencies": {
+		"frontend-js-web": "*"
+	},
+	"main": "js/index.js",
+	"name": "site-navigation-menu-web",
+	"optionalDependencies": {
+		"fsevents": "^1.2.7"
+	},
+	"scripts": {
+		"build": "node-scripts build",
+		"checkFormat": "node-scripts format --check",
+		"format": "node-scripts format"
+	},
+	"version": "6.0.68"
+}

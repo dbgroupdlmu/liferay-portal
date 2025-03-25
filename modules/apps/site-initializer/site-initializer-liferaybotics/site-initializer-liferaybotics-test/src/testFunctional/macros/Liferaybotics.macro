@@ -1,0 +1,12 @@
+definition {
+
+	@summary = "Default summary"
+	macro addLiferayboticsSite(siteName = null) {
+		Site.openSitesAdmin();
+
+		Site.addSiteTemplateCP(
+			siteName = ${siteName},
+			siteTemplateName = "Liferaybotics");
+	}
+
+}

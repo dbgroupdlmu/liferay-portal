@@ -1,0 +1,10 @@
+.portlet-configuration {
+	fieldset {
+		margin-bottom: 5px;
+	}
+
+	.lfr-panel-content {
+		background-color: #f8f8f8;
+		padding: 10px;
+	}
+}

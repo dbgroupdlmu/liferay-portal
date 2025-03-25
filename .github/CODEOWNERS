@@ -1,0 +1,306 @@
+modules/apps/accessibility/    @liferay-platform-experience
+modules/apps/account/
+modules/apps/adaptive-media/    @liferay-content-management
+modules/apps/address/
+modules/apps/ai-creator/
+modules/apps/analytics/
+modules/apps/announcements/    @liferay-content-management
+modules/apps/application-list/    @liferay-platform-experience
+modules/apps/archived/
+modules/apps/archived/youtube-web    @liferay-page-management
+modules/apps/asset-tags-validator/    @liferay-content-management
+modules/apps/asset/
+modules/apps/asset/asset-entry-query-processor-custom-user-attributes    @liferay-page-management
+modules/apps/asset/asset-display-page-api    @liferay-page-management
+modules/apps/asset/asset-display-page-item-selector-api    @liferay-page-management
+modules/apps/asset/asset-display-page-item-selector-web    @liferay-page-management
+modules/apps/asset/asset-display-page-service    @liferay-page-management
+modules/apps/asset/asset-display-page-test    @liferay-page-management
+modules/apps/asset/asset-display-web    @liferay-page-management
+modules/apps/asset/asset-info-display-api    @liferay-page-management
+modules/apps/asset/asset-info-display-impl    @liferay-page-management
+modules/apps/asset/asset-publisher-web    @liferay-page-management
+modules/apps/asset/asset-publisher-api    @liferay-page-management
+modules/apps/asset/asset-publisher-layout-prototype    @liferay-page-management
+modules/apps/asset/asset-publisher-test    @liferay-page-management
+modules/apps/asset/asset-publisher-web    @liferay-page-management
+modules/apps/batch-engine/    @liferay-headless
+modules/apps/batch-planner/    @liferay-headless
+modules/apps/bean-portlet/
+modules/apps/blogs/    @liferay-content-management
+modules/apps/bookmarks/    @liferay-content-management
+modules/apps/bulk/    @liferay-content-management
+modules/apps/calendar/
+modules/apps/captcha/
+modules/apps/change-tracking/
+modules/apps/changeset/
+modules/apps/click-to-chat/
+modules/apps/client-extension/
+modules/apps/comment/    @liferay-content-management
+modules/apps/commerce/    @liferay-commerce
+modules/apps/company/
+modules/apps/configuration-admin/    @liferay-platform-experience
+modules/apps/connected-app/    @liferay-content-management
+modules/apps/contacts/
+modules/apps/content-dashboard/    @liferay-content-management
+modules/apps/cookies/
+modules/apps/cookies/cookies-banner-web/    @liferay-frontend
+modules/apps/counter/
+modules/apps/data-cleanup/
+modules/apps/data-engine/    @liferay-bpm
+modules/apps/depot/    @liferay-content-management
+modules/apps/diff/
+modules/apps/digital-signature/
+modules/apps/dispatch/    @liferay-headless
+modules/apps/document-library-google-docs/    @liferay-content-management
+modules/apps/document-library-opener/    @liferay-content-management
+modules/apps/document-library/    @liferay-content-management
+modules/apps/dynamic-data-lists/    @liferay-bpm
+modules/apps/dynamic-data-mapping/    @liferay-bpm
+modules/apps/expando/
+modules/apps/export-import/
+modules/apps/external-reference/
+modules/apps/feature-flag/    @liferay-platform-experience
+modules/apps/flags/    @liferay-content-management
+modules/apps/fragment/    @liferay-page-management
+modules/apps/friendly-url/
+modules/apps/frontend-css/    @liferay-platform-experience
+modules/apps/frontend-css/frontend-css-rtl-servlet/    @liferay-frontend
+modules/apps/frontend-data-set/    @liferay-frontend
+modules/apps/frontend-editor/    @liferay-frontend
+modules/apps/frontend-icons/    @liferay-frontend
+modules/apps/frontend-js/    @liferay-frontend
+modules/apps/frontend-taglib/    @liferay-frontend
+modules/apps/frontend-theme/    @liferay-platform-experience
+modules/apps/frontend-theme/frontend-theme-favicon-servlet/
+modules/apps/frontend-token/    @liferay-platform-experience
+modules/apps/glowroot/
+modules/apps/gogo-shell/
+modules/apps/google-places/
+modules/apps/headless/headless-admin-address/
+modules/apps/headless/headless-admin-content/
+modules/apps/headless/headless-admin-list-type/
+modules/apps/headless/headless-admin-site/    @liferay-page-management
+modules/apps/headless/headless-admin-taxonomy/
+modules/apps/headless/headless-admin-user/
+modules/apps/headless/headless-admin-workflow/
+modules/apps/headless/headless-batch-engine/    @liferay-headless
+modules/apps/headless/headless-builder/    @liferay-headless
+modules/apps/headless/headless-common-spi/
+modules/apps/headless/headless-delivery/    @liferay-page-management
+modules/apps/headless/headless-discovery/    @liferay-headless
+modules/apps/headless/headless-form/
+modules/apps/headless/headless-portal-instances/
+modules/apps/headless/headless-site/
+modules/apps/headless/headless-user-notification/
+modules/apps/hello-velocity/
+modules/apps/iframe/
+modules/apps/iframe/iframe-web    @liferay-page-management
+modules/apps/image-uploader/
+modules/apps/image/
+modules/apps/imageio-plugins/
+modules/apps/info/
+modules/apps/info/info-api    @liferay-page-management
+modules/apps/info/info-test    @liferay-page-management
+modules/apps/info/info-test-util    @liferay-page-management
+modules/apps/info/info-impl    @liferay-page-management
+modules/apps/invitation/
+modules/apps/ip-geocoder/
+modules/apps/item-selector/    @liferay-content-management
+modules/apps/journal/    @liferay-content-management
+modules/apps/json-storage/
+modules/apps/knowledge-base/    @liferay-content-management
+modules/apps/layout/
+modules/apps/layout/layout-admin-api    @liferay-page-management
+modules/apps/layout/layout-admin-web    @liferay-page-management
+modules/apps/layout/layout-admin-web-test    @liferay-page-management
+modules/apps/layout/layout-api    @liferay-page-management
+modules/apps/layout/layout-content-page-editor-api    @liferay-page-management
+modules/apps/layout/layout-content-page-editor-web    @liferay-page-management
+modules/apps/layout/layout-content-page-editor-web-test    @liferay-page-management
+modules/apps/layout/layout-impl    @liferay-page-management
+modules/apps/layout/layout-page-template-admin-api    @liferay-page-management
+modules/apps/layout/layout-page-template-admin-web    @liferay-page-management
+modules/apps/layout/layout-page-template-admin-web-test    @liferay-page-management
+modules/apps/layout/layout-page-template-api    @liferay-page-management
+modules/apps/layout/layout-page-template-service    @liferay-page-management
+modules/apps/layout/layout-page-template-test    @liferay-page-management
+modules/apps/layout/layout-prototype-api    @liferay-page-management
+modules/apps/layout/layout-prototype-impl    @liferay-page-management
+modules/apps/layout/layout-prototype-test    @liferay-page-management
+modules/apps/layout/layout-reports-web/layout-reports-web    @liferay-page-management
+modules/apps/layout/layout-seo-api    @liferay-page-management
+modules/apps/layout/layout-seo-service    @liferay-page-management
+modules/apps/layout/layout-seo-test    @liferay-page-management
+modules/apps/layout/layout-seo-web    @liferay-page-management
+modules/apps/layout/layout-seo-web-test    @liferay-page-management
+modules/apps/layout/layout-taglib    @liferay-page-management
+modules/apps/layout/layout-test    @liferay-page-management
+modules/apps/layout/layout-test-util    @liferay-page-management
+modules/apps/layout/layout-utility-page/layout-utility-page-api    @liferay-page-management
+modules/apps/layout/layout-utility-page/layout-utility-page-service    @liferay-page-management
+modules/apps/layout/layout-utility-page/layout-utility-page-test    @liferay-page-management
+modules/apps/learn/
+modules/apps/license-manager/
+modules/apps/list-type/
+modules/apps/locked-items/    @liferay-content-management
+modules/apps/login/
+modules/apps/mail/
+modules/apps/map/
+modules/apps/map/map-google-maps    @liferay-page-management
+modules/apps/marketplace/
+modules/apps/mentions/    @liferay-content-management
+modules/apps/message-boards/    @liferay-content-management
+modules/apps/microblogs/    @liferay-content-management
+modules/apps/microsoft-translator/
+modules/apps/mobile-device-rules/
+modules/apps/monitoring/
+modules/apps/my-subscriptions/    @liferay-content-management
+modules/apps/nested-portlets/
+modules/apps/nested-portlets/nested-portlets-web    @liferay-page-management
+modules/apps/normalizer/
+modules/apps/notification/
+modules/apps/notifications/    @liferay-content-management
+modules/apps/oauth-client/
+modules/apps/oauth2-provider/
+modules/apps/object/    @liferay-bpm
+modules/apps/object/object-rest-impl    @liferay-headless
+modules/apps/object/object-rest-test    @liferay-headless
+modules/apps/on-demand-admin/
+modules/apps/organizations/
+modules/apps/password-policies-admin/
+modules/apps/plugins-admin/
+modules/apps/portal-background-task/
+modules/apps/portal-cache/
+modules/apps/portal-configuration/
+modules/apps/portal-crypto-hash/
+modules/apps/portal-instances/
+modules/apps/portal-language/
+modules/apps/portal-language/portal-language-override-api/    @liferay-platform-experience
+modules/apps/portal-language/portal-language-override-service/    @liferay-platform-experience
+modules/apps/portal-language/portal-language-override-test/    @liferay-platform-experience
+modules/apps/portal-language/portal-language-override-web/    @liferay-platform-experience
+modules/apps/portal-lock/
+modules/apps/portal-mobile-device-recognition/
+modules/apps/portal-model-relationship/
+modules/apps/portal-odata/
+modules/apps/portal-osgi-debug/
+modules/apps/portal-portlet-bridge/
+modules/apps/portal-relationship/
+modules/apps/portal-remote/
+modules/apps/portal-reports-engine/
+modules/apps/portal-rules-engine/
+modules/apps/portal-scheduler/
+modules/apps/portal-scripting/
+modules/apps/portal-search-elasticsearch7/
+modules/apps/portal-search-opensearch2/
+modules/apps/portal-search-solr8/
+modules/apps/portal-search/
+modules/apps/portal-security-audit/
+modules/apps/portal-security-sso/
+modules/apps/portal-security/
+modules/apps/portal-settings/    @liferay-appsec
+modules/apps/portal-settings/portal-settings-api/    @liferay-platform-experience
+modules/apps/portal-settings/portal-settings-web/    @liferay-platform-experience
+modules/apps/portal-store/
+modules/apps/portal-template/
+modules/apps/portal-transaction/
+modules/apps/portal-url-builder/
+modules/apps/portal-validation/
+modules/apps/portal-vulcan/    @liferay-headless
+modules/apps/portal-workflow/    @liferay-bpm
+modules/apps/portal/
+modules/apps/portlet-configuration/
+modules/apps/portlet-configuration/portlet-configuration-web    @liferay-page-management
+modules/apps/portlet-configuration/portlet-configuration-css-web    @liferay-page-management
+modules/apps/portlet-dependency-factory/
+modules/apps/portlet-display-template/
+modules/apps/portlet-display-template/portlet-display-template-api    @liferay-page-management
+modules/apps/portlet-display-template/portlet-display-template-impl    @liferay-page-management
+modules/apps/portlet-display-template/portlet-display-template-web    @liferay-page-management
+modules/apps/portlet-preferences/
+modules/apps/portlet/
+modules/apps/product-navigation/    @liferay-platform-experience
+modules/apps/product-navigation/product-navigation-simulation-api    @liferay-page-management
+modules/apps/product-navigation/product-navigation-simulation-device    @liferay-page-management
+modules/apps/product-navigation/product-navigation-simulation-theme-contributor    @liferay-page-management
+modules/apps/product-navigation/product-navigation-simulation-web    @liferay-page-management
+modules/apps/push-notifications/
+modules/apps/questions/    @liferay-content-management
+modules/apps/ratings/    @liferay-content-management
+modules/apps/reading-time/    @liferay-content-management
+modules/apps/redirect/
+modules/apps/release-feature-flag/    @liferay-platform-experience
+modules/apps/repository/    @liferay-content-management
+modules/apps/roles/
+modules/apps/rss/
+modules/apps/rss/rss-api    @liferay-page-management
+modules/apps/rss/rss-impl    @liferay-page-management
+modules/apps/rss/rss-taglib    @liferay-page-management
+modules/apps/rss/rss-web    @liferay-page-management
+modules/apps/saved-content/    @liferay-content-management
+modules/apps/segments/
+modules/apps/server/
+modules/apps/service-component/
+modules/apps/shared-dependencies/
+modules/apps/sharing/    @liferay-content-management
+modules/apps/site-initializer/
+modules/apps/site-navigation/
+modules/apps/site-navigation/site-navigation-language-web    @liferay-page-management
+modules/apps/site/
+modules/apps/social/    @liferay-content-management
+modules/apps/staging/    @liferay-headless
+modules/apps/static/
+modules/apps/style-book/    @liferay-platform-experience
+modules/apps/subscription/    @liferay-content-management
+modules/apps/template/
+modules/apps/text-localizer/
+modules/apps/translation/    @liferay-content-management
+modules/apps/trash/    @liferay-content-management
+modules/apps/upload/    @liferay-content-management
+modules/apps/user-associated-data/
+modules/apps/user-groups-admin/
+modules/apps/user/
+modules/apps/users-admin/
+modules/apps/view-count/
+modules/apps/website/
+modules/apps/websocket/
+modules/apps/wiki/    @liferay-content-management
+modules/apps/words/
+modules/apps/xstream/
+modules/dxp/apps/akismet/
+modules/dxp/apps/analytics/
+modules/dxp/apps/antivirus/
+modules/dxp/apps/commerce-avalara/    @liferay-commerce
+modules/dxp/apps/commerce-demo-pack/    @liferay-commerce
+modules/dxp/apps/commerce-punchout/    @liferay-commerce
+modules/dxp/apps/commerce/    @liferay-commerce
+modules/dxp/apps/document-library-opener/    @liferay-content-management
+modules/dxp/apps/enterprise-product-notification/
+modules/dxp/apps/frontend-theme/    @liferay-platform-experience
+modules/dxp/apps/multi-factor-authentication/
+modules/dxp/apps/osb/
+modules/dxp/apps/portal-reports-engine-console/
+modules/dxp/apps/portal-rules-engine-drools/
+modules/dxp/apps/portal-search-elasticsearch-cross-cluster-replication/
+modules/dxp/apps/portal-search-elasticsearch-monitoring/
+modules/dxp/apps/portal-search-learning-to-rank/
+modules/dxp/apps/portal-search-similar-results/
+modules/dxp/apps/portal-search-tuning/
+modules/dxp/apps/portal-security-audit/
+modules/dxp/apps/portal-workflow-kaleo-forms/    @liferay-bpm
+modules/dxp/apps/portal-workflow/    @liferay-bpm
+modules/dxp/apps/portal/
+modules/dxp/apps/salesforce-connector/
+modules/dxp/apps/saml/
+modules/dxp/apps/scim/
+modules/dxp/apps/search-experiences/
+modules/dxp/apps/segments/
+modules/dxp/apps/sharepoint-rest/    @liferay-content-management
+modules/dxp/apps/sharepoint-soap/    @liferay-content-management
+modules/util/portal-tools-rest-builder/    @liferay-headless
+modules/util/portal-tools-rest-builder-test-api/    @liferay-headless
+modules/util/portal-tools-rest-builder-test-client/    @liferay-headless
+modules/util/portal-tools-rest-builder-test-client-js/    @liferay-headless
+modules/util/portal-tools-rest-builder-test-impl/    @liferay-headless
+modules/util/portal-tools-rest-builder-test-test/    @liferay-headless

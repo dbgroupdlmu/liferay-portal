@@ -1,0 +1,23 @@
+[
+	{
+		"menuItems": [
+			{
+				"friendlyURL": "/home",
+				"privateLayout": false,
+				"type": "layout"
+			},
+			{
+				"friendlyURL": "/request",
+				"privateLayout": false,
+				"type": "layout"
+			},
+			{
+				"friendlyURL": "/organization",
+				"privateLayout": false,
+				"type": "layout"
+			}
+		],
+		"name": "Header Navigation Menu",
+		"typeSite": 1
+	}
+]
