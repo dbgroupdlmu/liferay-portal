@@ -239,6 +239,9 @@ definition {
 		else if (${databaseType} == "Oracle") {
 			AssertConsoleTextPresent(value1 = "Using dialect org.hibernate.dialect.Oracle10gDialect for Oracle");
 		}
+		else if (${databaseType} == "Kingbase") {
+			AssertConsoleTextPresent(value1 = "Using dialect com.liferay.portal.dao.orm.hibernate.KingbaseDialect for Kingbase");
+		}
 		else if (${databaseType} == "PostgreSQL") {
 			AssertConsoleTextPresent(value1 = "Using dialect org.hibernate.dialect.PostgreSQL10Dialect for PostgreSQL");
 		}

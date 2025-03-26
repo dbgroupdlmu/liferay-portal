@@ -84,6 +84,9 @@ public class SchemaCreatorImpl implements SchemaCreator {
 		try (Connection connection = _dataSource.getConnection()) {
 			if (tablesSQL != null) {
 				try {
+					
+					_log.warn("*********tablesSQL is *******:"+tablesSQL);
+					
 					_db.runSQLTemplate(connection, tablesSQL, true);
 				}
 				catch (Exception exception) {

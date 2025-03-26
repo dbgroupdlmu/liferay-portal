@@ -245,6 +245,16 @@ public class CustomSQL {
 	public boolean isVendorPostgreSQL() {
 		return _vendorPostgreSQL;
 	}
+	/**
+	 * Returns <code>true</code> if Hibernate is connecting to a kingbase
+	 * database.
+	 *
+	 * @return <code>true</code> if Hibernate is connecting to a kingbase
+	 *         database
+	 */
+	public boolean isVendorKingbase() {
+		return _vendorKingbase;
+	}
 
 	/**
 	 * Returns <code>true</code> if Hibernate is connecting to a Sybase
@@ -440,6 +450,14 @@ public class CustomSQL {
 					if (_log.isInfoEnabled()) {
 						_log.info(
 							"Detected PostgreSQL with database name " + dbName);
+					}
+				}
+				else if (dbName.startsWith("Kingbase")) {
+					_vendorKingbase = true;
+
+					if (_log.isInfoEnabled()) {
+						_log.info(
+							"Detected Kingbase with database name " + dbName);
 					}
 				}
 				else {
@@ -915,6 +933,7 @@ public class CustomSQL {
 	private boolean _vendorMySQL;
 	private boolean _vendorOracle;
 	private boolean _vendorPostgreSQL;
+	private boolean _vendorKingbase;
 	private boolean _vendorSybase;
 
 }

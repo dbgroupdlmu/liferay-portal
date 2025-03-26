@@ -26,7 +26,7 @@ public abstract class BaseCommandTestCase {
 	public static String[] getModes() {
 		return new String[] {
 			"DB2", "Derby", "HSQLDB", "MSSQLServer", "MySQL", "Oracle",
-			"PostgreSQL"
+			"PostgreSQL", "Kingbase"
 		};
 	}
 

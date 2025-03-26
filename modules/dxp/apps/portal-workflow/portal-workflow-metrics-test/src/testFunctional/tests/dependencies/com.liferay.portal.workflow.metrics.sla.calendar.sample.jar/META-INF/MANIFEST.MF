@@ -25,7 +25,7 @@ Liferay-Releng-Restart-Required: true
 Liferay-Releng-Suite: forms-and-workflow
 Liferay-Releng-Suite-Description: Apps and Features: Calendar, Dynamic
   Data Lists, Dynamic Data Mapping, Forms, Polls, Workflow<br /><br />
- An increase in productivity means you're saving time and effort; youâ
+ An increase in productivity means you're saving time and effort; you?
  €™re becoming more efficient. The Forms and Workflow apps help you do
   that by giving you built-in calendars and the ability to create your
   own forms and list applications. These are powerful, flexible apps t

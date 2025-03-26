@@ -793,7 +793,7 @@ public class DBUpgradeClient {
 	};
 
 	private static final String[] _DATABASE_TYPES = {
-		"db2", "mariadb", "mysql", "oracle", "postgresql", "sqlserver"
+		"db2", "mariadb", "mysql", "oracle", "postgresql", "sqlserver", "kingbase"
 	};
 
 	private static final String _GOGO_SHELL_PREFIX = "g! ";

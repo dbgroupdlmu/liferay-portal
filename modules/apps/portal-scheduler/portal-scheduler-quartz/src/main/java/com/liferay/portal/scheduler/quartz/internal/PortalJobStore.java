@@ -45,13 +45,16 @@ public class PortalJobStore extends JobStoreTX {
 			else if (dbType == DBType.POSTGRESQL) {
 				driverDelegateClass = PostgreSQLDelegate.class;
 			}
+			else if (dbType == DBType.KINGBASE) {
+				driverDelegateClass = PostgreSQLDelegate.class;
+			}
 			else if (dbType == DBType.SQLSERVER) {
 				driverDelegateClass = MSSQLDelegate.class;
 			}
 			else if (dbType == DBType.SYBASE) {
 				driverDelegateClass = SybaseDelegate.class;
 			}
-
+			
 			if (_log.isDebugEnabled()) {
 				_log.debug("Instantiating " + driverDelegateClass);
 			}

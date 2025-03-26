@@ -46,6 +46,14 @@ public class DatabaseUtil {
 
 		return false;
 	}
+	
+	public static boolean isKingbase(String jdbcURL) {
+		if (jdbcURL.indexOf("kingbase") != -1) {
+			return true;
+		}
+
+		return false;
+	}
 
 	public static String replaceSchemaName(String jdbcURL, String schemaName) {
 		if (schemaName == null) {
@@ -55,6 +63,11 @@ public class DatabaseUtil {
 		if (isPostgreSQL(jdbcURL)) {
 			return _replacePostgreSQLSchemaName(jdbcURL, schemaName);
 		}
+		else if (isKingbase(jdbcURL)) {
+			return _replaceKingbaseSchemaName(jdbcURL, schemaName);
+		}
+		
+		
 
 		return _replaceMySQLSchemaName(jdbcURL, schemaName);
 	}
@@ -198,6 +211,17 @@ public class DatabaseUtil {
 		}
 
 		return jdbcURL + "&currentSchema=" + schemaName;
+	}
+	private static String _replaceKingbaseSchemaName(
+			String jdbcURL, String schemaName) {
+
+			int index = jdbcURL.indexOf("?");
+
+			if (index == -1) {
+				return jdbcURL + "?currentSchema=" + schemaName;
+			}
+
+			return jdbcURL + "&currentSchema=" + schemaName;
 	}
 
 }

@@ -304,6 +304,17 @@ public class CustomSQLImpl implements CustomSQL {
 	public boolean isVendorPostgreSQL() {
 		return _vendorPostgreSQL;
 	}
+	/**
+	 * Returns <code>true</code> if Hibernate is connecting to a Kingbase
+	 * database.
+	 *
+	 * @return <code>true</code> if Hibernate is connecting to a Kingbase
+	 *         database
+	 */
+	
+	public boolean isVendorKingbase() {
+		return _vendorKingbase;
+	}
 
 	/**
 	 * Returns <code>true</code> if Hibernate is connecting to a Sybase
@@ -474,6 +485,21 @@ public class CustomSQLImpl implements CustomSQL {
 					"Date <= ? OR CAST(? AS TIMESTAMP) IS NULL"
 				});
 		}
+		else if (_vendorKingbase) {
+			sql = StringUtil.replace(
+				sql,
+				new String[] {
+					"Date >= ? AND ? IS NOT NULL",
+					"Date <= ? AND ? IS NOT NULL", "Date >= ? OR ? IS NULL",
+					"Date <= ? OR ? IS NULL"
+				},
+				new String[] {
+					"Date >= ? AND CAST(? AS TIMESTAMP) IS NOT NULL",
+					"Date <= ? AND CAST(? AS TIMESTAMP) IS NOT NULL",
+					"Date >= ? OR CAST(? AS TIMESTAMP) IS NULL",
+					"Date <= ? OR CAST(? AS TIMESTAMP) IS NULL"
+				});
+		} 
 
 		return replaceIsNull(sql);
 	}
@@ -721,6 +747,8 @@ public class CustomSQLImpl implements CustomSQL {
 				if (_log.isInfoEnabled()) {
 					_log.info("Database name " + dbName);
 				}
+				
+				_log.warn("*****************************Database name is***********" + dbName);
 
 				if (dbName.startsWith("DB2")) {
 					_vendorDB2 = true;
@@ -782,6 +810,14 @@ public class CustomSQLImpl implements CustomSQL {
 					if (_log.isInfoEnabled()) {
 						_log.info(
 							"Detected PostgreSQL with database name " + dbName);
+					}
+				}
+				else if (dbName.startsWith("Kingbase")||dbName.startsWith("kingbase")) {
+					_vendorKingbase = true;
+
+					if (_log.isInfoEnabled()) {
+						_log.info(
+							"Detected Kingbase with database name " + dbName);
 					}
 				}
 				else {
@@ -981,6 +1017,7 @@ public class CustomSQLImpl implements CustomSQL {
 	private boolean _vendorMySQL;
 	private boolean _vendorOracle;
 	private boolean _vendorPostgreSQL;
+	private boolean _vendorKingbase;
 	private boolean _vendorSybase;
 
 	private class CustomSQLContainer {

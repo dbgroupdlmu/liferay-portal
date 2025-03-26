@@ -11,7 +11,7 @@ package com.liferay.portal.kernel.dao.db;
 public enum DBType {
 
 	DB2("db2"), HYPERSONIC("hypersonic"), MARIADB("mariadb"), MYSQL("mysql"),
-	ORACLE("oracle"), POSTGRESQL("postgresql"), SQLSERVER("sqlserver"),
+	ORACLE("oracle"), KINGBASE("kingbase"),POSTGRESQL("postgresql"), SQLSERVER("sqlserver"),
 	SYBASE("sybase");
 
 	public String getName() {

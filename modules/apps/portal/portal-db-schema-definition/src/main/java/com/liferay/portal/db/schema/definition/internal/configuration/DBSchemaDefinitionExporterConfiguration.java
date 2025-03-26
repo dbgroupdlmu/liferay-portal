@@ -20,7 +20,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 )
 public interface DBSchemaDefinitionExporterConfiguration {
 
-	@Meta.AD(name = "database-type", optionValues = {"mysql", "postgresql"})
+	@Meta.AD(name = "database-type", optionValues = {"mysql", "postgresql","kingbase"})
 	public String databaseType();
 
 	@Meta.AD(name = "path")

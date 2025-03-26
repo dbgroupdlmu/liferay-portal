@@ -48,6 +48,11 @@ public class Database {
 				"org.postgresql.Driver", "jdbc:postgresql://", "localhost",
 				5432, "", "lportal");
 		}
+		if (databaseType.equals("kingbase")) {
+			return new Database(
+				"com.kingbase8.Driver", "jdbc:kingbase8://", "localhost",
+				54321, "", "lportal");
+		}
 
 		if (databaseType.equals("sqlserver")) {
 			return new Database(

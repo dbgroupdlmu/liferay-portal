@@ -29,7 +29,11 @@
 	<classpathentry excluding="**/.svn/**|.svn/" kind="src" path="util-slf4j/src"/>
 	<classpathentry excluding="**/.svn/**|.svn/" kind="src" path="util-taglib/src"/>
 	<classpathentry excluding="**/.svn/**|.svn/" kind="src" path="util-taglib/test/unit"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/development/activation.jar"/>
 	<classpathentry kind="lib" path="lib/development/alloy-taglib.jar"/>
 	<classpathentry kind="lib" path="lib/development/ant-apache-bsf.jar"/>
@@ -165,5 +169,12 @@
 	<classpathentry kind="lib" path="lib/portal/transaction.jar"/>
 	<classpathentry kind="lib" path="lib/portal/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="lib/portal/xml-apis.jar"/>
+	<classpathentry kind="lib" path="/home/db/liferay-bm/liferay-portal/libs/kingbase8-9.0.0.jar"/>
+	<classpathentry kind="lib" path="/home/db/liferay-bm/liferay-portal/lib/portal/hibernate-4.dialect.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/home/db/liferay-bm/liferay-portal/libs/hibernate-4.dialect.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

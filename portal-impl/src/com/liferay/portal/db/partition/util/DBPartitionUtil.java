@@ -14,6 +14,7 @@ import com.liferay.portal.dao.jdbc.util.DataSourceWrapper;
 import com.liferay.portal.db.partition.db.DBPartitionDB;
 import com.liferay.portal.db.partition.db.DBPartitionMySQLDB;
 import com.liferay.portal.db.partition.db.DBPartitionPostgreSQLDB;
+import com.liferay.portal.db.partition.db.DBPartitionKingbaseDB;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBInspector;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
@@ -332,6 +333,9 @@ public class DBPartitionUtil {
 		}
 		else if (db.getDBType() == DBType.POSTGRESQL) {
 			_dbPartitionDB = new DBPartitionPostgreSQLDB();
+		}
+		else if (db.getDBType() == DBType.KINGBASE) {
+			_dbPartitionDB = new DBPartitionKingbaseDB();
 		}
 
 		try (Connection connection = dataSource.getConnection()) {

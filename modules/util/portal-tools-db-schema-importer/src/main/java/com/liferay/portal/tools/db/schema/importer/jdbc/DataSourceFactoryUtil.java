@@ -34,6 +34,9 @@ public class DataSourceFactoryUtil {
 		if (jdbcURL.indexOf("postgresql") > 0) {
 			driverClassName = "org.postgresql.Driver";
 		}
+		else if (jdbcURL.indexOf("kingbase") > 0) {
+			driverClassName = "com.kingbase8.Driver";
+		}
 
 		Class.forName(driverClassName);
 
@@ -52,6 +55,9 @@ public class DataSourceFactoryUtil {
 
 		if (partitionName != null) {
 			if (StringUtil.equals(driverClassName, "org.postgresql.Driver")) {
+				hikariConfig.setSchema(partitionName);
+			}
+			else if (StringUtil.equals(driverClassName, "com.kingbase8.Driver")) {
 				hikariConfig.setSchema(partitionName);
 			}
 			else {

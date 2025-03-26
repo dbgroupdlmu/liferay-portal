@@ -128,6 +128,16 @@ public class LockLocalServiceTest {
 						expectedType = ExpectedType.PREFIX
 					),
 					@ExpectedLog(
+							expectedDBType = ExpectedDBType.KINGBASE,
+							expectedLog = "Batch entry 0 insert into Lock_ ",
+							expectedType = ExpectedType.PREFIX
+						),
+						@ExpectedLog(
+							expectedDBType = ExpectedDBType.KINGBASE,
+							expectedLog = "ERROR: duplicate key value violates unique constraint ",
+							expectedType = ExpectedType.PREFIX
+						),
+					@ExpectedLog(
 						expectedDBType = ExpectedDBType.SQLSERVER,
 						expectedLog = "Cannot insert duplicate key row in object",
 						expectedType = ExpectedType.PREFIX
@@ -347,6 +357,16 @@ public class LockLocalServiceTest {
 						expectedLog = "ERROR: duplicate key value violates unique constraint ",
 						expectedType = ExpectedType.PREFIX
 					),
+					@ExpectedLog(
+							expectedDBType = ExpectedDBType.KINGBASE,
+							expectedLog = "Batch entry 0 insert into Lock_ ",
+							expectedType = ExpectedType.PREFIX
+						),
+						@ExpectedLog(
+							expectedDBType = ExpectedDBType.KINGBASE,
+							expectedLog = "ERROR: duplicate key value violates unique constraint ",
+							expectedType = ExpectedType.PREFIX
+						),
 					@ExpectedLog(
 						expectedDBType = ExpectedDBType.SQLSERVER,
 						expectedLog = "Cannot insert duplicate key row in object",

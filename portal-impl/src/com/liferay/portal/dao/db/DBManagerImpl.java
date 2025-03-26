@@ -5,11 +5,33 @@
 
 package com.liferay.portal.dao.db;
 
+import java.util.EnumMap;
+import java.util.LinkedHashSet;
+import java.util.ServiceLoader;
+import java.util.Set;
+
+import javax.sql.DataSource;
+
+import org.hibernate.dialect.DB2Dialect;
+import org.hibernate.dialect.Dialect;
+import org.hibernate.dialect.HSQLDialect;
+import org.hibernate.dialect.Kingbase8MysqlDialect;
+import org.hibernate.dialect.MySQLDialect;
+import org.hibernate.dialect.Oracle8iDialect;
+import org.hibernate.dialect.Oracle9Dialect;
+import org.hibernate.dialect.PostgreSQL82Dialect;
+import org.hibernate.dialect.SQLServerDialect;
+import org.hibernate.dialect.Sybase11Dialect;
+import org.hibernate.dialect.SybaseASE15Dialect;
+import org.hibernate.dialect.SybaseAnywhereDialect;
+import org.hibernate.dialect.SybaseDialect;
+
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.dao.jdbc.util.DBInfo;
 import com.liferay.portal.dao.jdbc.util.DBInfoUtil;
 import com.liferay.portal.dao.orm.hibernate.DialectImpl;
 import com.liferay.portal.dao.orm.hibernate.MariaDBDialect;
+import com.liferay.portal.dao.orm.hibernate.KingbaseDialect;
 import com.liferay.portal.kernel.configuration.Filter;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBFactory;
@@ -25,26 +47,6 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.spring.hibernate.DialectDetector;
 import com.liferay.portal.util.PropsValues;
 
-import java.util.EnumMap;
-import java.util.LinkedHashSet;
-import java.util.ServiceLoader;
-import java.util.Set;
-
-import javax.sql.DataSource;
-
-import org.hibernate.dialect.DB2Dialect;
-import org.hibernate.dialect.Dialect;
-import org.hibernate.dialect.HSQLDialect;
-import org.hibernate.dialect.MySQLDialect;
-import org.hibernate.dialect.Oracle8iDialect;
-import org.hibernate.dialect.Oracle9Dialect;
-import org.hibernate.dialect.PostgreSQL82Dialect;
-import org.hibernate.dialect.SQLServerDialect;
-import org.hibernate.dialect.Sybase11Dialect;
-import org.hibernate.dialect.SybaseASE15Dialect;
-import org.hibernate.dialect.SybaseAnywhereDialect;
-import org.hibernate.dialect.SybaseDialect;
-
 /**
  * @author Alexander Chow
  * @author Brian Wing Shun Chan
@@ -56,13 +58,17 @@ public class DBManagerImpl implements DBManager {
 		ServiceLoader<DBFactory> serviceLoader = ServiceLoader.load(
 			DBFactory.class, DBManagerImpl.class.getClassLoader());
 
+		
+//		_log.warn("*************before DBfactory register***********");
 		for (DBFactory dbFactory : serviceLoader) {
 			_dbFactories.put(dbFactory.getDBType(), dbFactory);
 		}
+//		_log.warn("*************after DBfactory register, DBfactory are :"+_dbFactories);
 	}
 
 	@Override
 	public DB getDB() {
+	//	_log.warn("before get db*******************:");
 		if (_db == null) {
 			try {
 				if (_log.isInfoEnabled()) {
@@ -81,13 +87,20 @@ public class DBManagerImpl implements DBManager {
 				_log.error(exception);
 			}
 		}
+		
+	//	_log.warn("after get db,dbtype is ***************:"+_db.getDBType().getName());
+
 
 		return _db;
 	}
 
 	@Override
 	public DB getDB(DBType dbType, DataSource dataSource) {
+	//	_log.warn("*************before _dbFactories,dbtype is"+dbType);
+		
 		DBFactory dbCreator = _dbFactories.get(dbType);
+		
+	//	_log.warn("******************after DBfactory**********");
 
 		if (dbCreator == null) {
 			throw new IllegalArgumentException(
@@ -154,6 +167,7 @@ public class DBManagerImpl implements DBManager {
 
 	@Override
 	public DBType getDBType(Object dialect) {
+		
 		if (dialect instanceof DialectImpl) {
 			DialectImpl dialectImpl = (DialectImpl)dialect;
 
@@ -181,6 +195,12 @@ public class DBManagerImpl implements DBManager {
 
 			return DBType.ORACLE;
 		}
+		if (dialect instanceof Kingbase8MysqlDialect || dialect instanceof KingbaseDialect) {
+
+	//		_log.warn( "******************dialect type is kingbase " + dialect);
+
+				return DBType.KINGBASE;
+			}
 
 		if (dialect instanceof PostgreSQL82Dialect) {
 			return DBType.POSTGRESQL;
@@ -197,6 +217,7 @@ public class DBManagerImpl implements DBManager {
 
 			return DBType.SYBASE;
 		}
+		_log.warn( "Unknown dialect type " + dialect);
 
 		throw new IllegalArgumentException("Unknown dialect type " + dialect);
 	}

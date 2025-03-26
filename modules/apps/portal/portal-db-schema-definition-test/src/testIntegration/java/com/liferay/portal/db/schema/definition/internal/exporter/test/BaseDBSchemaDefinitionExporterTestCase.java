@@ -49,7 +49,7 @@ public abstract class BaseDBSchemaDefinitionExporterTestCase {
 		DBType dbType = DBManagerUtil.getDBType();
 
 		Assume.assumeTrue(
-			(dbType == DBType.MYSQL) || (dbType == DBType.POSTGRESQL));
+			(dbType == DBType.MYSQL) || (dbType == DBType.POSTGRESQL)|| (dbType == DBType.KINGBASE));
 	}
 
 	protected static void setUpClassBaseDBSchemaDefinitionExporterTestCase()

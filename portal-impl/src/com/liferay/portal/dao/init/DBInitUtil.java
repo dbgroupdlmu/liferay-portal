@@ -48,6 +48,8 @@ public class DBInitUtil {
 
 	public static void init() throws Exception {
 		_readDataSource = _initDataSource("jdbc.read.");
+		
+		
 
 		_writeDataSource = _initDataSource("jdbc.write.");
 
@@ -57,6 +59,7 @@ public class DBInitUtil {
 		}
 		else {
 			_dataSource = _initDataSource("jdbc.default.");
+			_log.warn("datasource is ********"+_dataSource.toString());
 		}
 
 		if (_dataSource == null) {
@@ -201,14 +204,26 @@ public class DBInitUtil {
 		Properties properties = PropsUtil.getProperties(prefix, true);
 
 		if ((properties == null) || properties.isEmpty()) {
+			_log.warn("No properties found for jdbc.default.*************************");
 			return null;
 		}
+		else {
+			properties.forEach((key, value) -> {
+			    if (!"password".equalsIgnoreCase(key.toString())) {
+			        // 使用字符串拼接
+			        _log.warn("Property " + key + " = " + value);
+			    } else {
+			        // 对于敏感信息，避免直接输出
+			        _log.warn("Property " + key + " = ********");
+			    }
+			});
+		}
 
-		DataSource dataSource = DataSourceFactoryUtil.initDataSource(
-			properties);
+		DataSource dataSource = DataSourceFactoryUtil.initDataSource(properties);
 
+		_log.warn("**************before DBManagerUtil setDB **********");
 		DBManagerUtil.setDB(DialectDetector.getDialect(dataSource), dataSource);
-
+		_log.warn("**************after DBManagerUtil setDB **********");
 		return dataSource;
 	}
 
@@ -216,6 +231,7 @@ public class DBInitUtil {
 			DB db, Connection connection, ClassLoader classLoader, String path)
 		throws Exception {
 
+		_log.warn("dbtype connection path are ****"+db.getDBType()+"*****"+connection+"*****"+path);
 		db.runSQLTemplate(
 			connection,
 			StreamUtil.toString(

@@ -46,7 +46,8 @@ public class SequenceEntryLocalServiceTest {
 
 		Assume.assumeTrue(
 			(dbType == DBType.DB2) || (dbType == DBType.ORACLE) ||
-			(dbType == DBType.POSTGRESQL));
+			(dbType == DBType.POSTGRESQL)||
+			(dbType == DBType.KINGBASE));
 	}
 
 	@BeforeClass

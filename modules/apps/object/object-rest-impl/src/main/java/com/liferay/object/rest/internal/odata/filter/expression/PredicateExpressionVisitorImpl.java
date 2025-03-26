@@ -654,7 +654,8 @@ public class PredicateExpressionVisitorImpl
 			(Objects.equals(DBManagerUtil.getDBType(), DBType.DB2) ||
 			 Objects.equals(DBManagerUtil.getDBType(), DBType.HYPERSONIC) ||
 			 Objects.equals(DBManagerUtil.getDBType(), DBType.ORACLE) ||
-			 Objects.equals(DBManagerUtil.getDBType(), DBType.POSTGRESQL)) &&
+			 Objects.equals(DBManagerUtil.getDBType(), DBType.POSTGRESQL)||
+			 Objects.equals(DBManagerUtil.getDBType(), DBType.KINGBASE)) &&
 			Validator.isNotNull(right)) {
 
 			try {
@@ -668,6 +669,11 @@ public class PredicateExpressionVisitorImpl
 
 				if (Objects.equals(
 						DBManagerUtil.getDBType(), DBType.POSTGRESQL)) {
+
+					right = date;
+				}
+				else if (Objects.equals(
+						DBManagerUtil.getDBType(), DBType.KINGBASE)) {
 
 					right = date;
 				}

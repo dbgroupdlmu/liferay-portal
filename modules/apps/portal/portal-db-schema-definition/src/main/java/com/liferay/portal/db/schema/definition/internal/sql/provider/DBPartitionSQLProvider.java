@@ -70,10 +70,10 @@ public class DBPartitionSQLProvider extends BaseSQLProvider {
 	public String getTablesSQL() {
 		Supplier<String> rulesSQLSupplier = () -> StringPool.BLANK;
 
-		if (db.getDBType() == DBType.POSTGRESQL) {
-			rulesSQLSupplier = this::_getRulesSQL;
+		if (db.getDBType() == DBType.POSTGRESQL ) {
+			rulesSQLSupplier = this::_getRulesPostgreSQL;
 		}
-
+	
 		return StringBundler.concat(
 			_getCreatePartitionSQL(),
 			StringUtil.replace(
@@ -143,7 +143,7 @@ public class DBPartitionSQLProvider extends BaseSQLProvider {
 				createTableSQL = StringUtil.trim(createTableSQL);
 
 				if (StringUtil.startsWith(
-						createTableSQL, "create or replace rule")) {
+						createTableSQL, "create or replace rule")&& db.getDBType() == DBType.POSTGRESQL ) {
 
 					String[] ruleTableColumn =
 						DBPartitionPostgreSQLDB.getRuleTableColumn(
@@ -154,7 +154,8 @@ public class DBPartitionSQLProvider extends BaseSQLProvider {
 
 					continue;
 				}
-
+				
+				
 				if (StringUtil.startsWith(createTableSQL, "create table")) {
 					String[] parts = createTableSQL.split(StringPool.SPACE);
 
@@ -175,7 +176,7 @@ public class DBPartitionSQLProvider extends BaseSQLProvider {
 		return sb.toString();
 	}
 
-	private String _getRulesSQL() {
+	private String _getRulesPostgreSQL() {
 		StringBundler sb = new StringBundler();
 
 		for (List<String> ruleTableColumn : _rulesTableColumn) {
@@ -191,6 +192,7 @@ public class DBPartitionSQLProvider extends BaseSQLProvider {
 
 		return sb.toString();
 	}
+	
 
 	private String _getViewsSQL() {
 		StringBundler sb = new StringBundler(_controlTableNames.size());

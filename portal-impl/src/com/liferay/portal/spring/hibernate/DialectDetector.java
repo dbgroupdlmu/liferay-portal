@@ -11,6 +11,8 @@ import com.liferay.portal.dao.jdbc.util.DBInfo;
 import com.liferay.portal.dao.jdbc.util.DBInfoUtil;
 import com.liferay.portal.dao.orm.hibernate.DB2Dialect;
 import com.liferay.portal.dao.orm.hibernate.HSQLDialect;
+import com.liferay.portal.dao.orm.hibernate.KingbaseDialect;
+import org.hibernate.dialect.Kingbase8MysqlDialect;
 import com.liferay.portal.dao.orm.hibernate.MariaDBDialect;
 import com.liferay.portal.dao.orm.hibernate.Oracle10gDialect;
 import com.liferay.portal.dao.orm.hibernate.SQLServer2005Dialect;
@@ -42,10 +44,13 @@ public class DialectDetector {
 		Dialect dialect = null;
 
 		DBInfo dbInfo = DBInfoUtil.getDBInfo(dataSource);
-
+		
+		
 		int dbMajorVersion = dbInfo.getMajorVersion();
 		int dbMinorVersion = dbInfo.getMinorVersion();
 		String dbName = dbInfo.getName();
+		
+	//	_log.warn("dbname is *********************"+ dbName);
 
 		String dialectKey = null;
 
@@ -53,9 +58,10 @@ public class DialectDetector {
 			dialectKey = StringBundler.concat(
 				dbName, StringPool.COLON, dbMajorVersion, StringPool.COLON,
 				dbMinorVersion);
-
+			
+	//		_log.warn("dialectkey is *********************"+ dialectKey);
 			dialect = _dialects.get(dialectKey);
-
+	//		_log.warn("dialect list is **************************"+ _dialects);
 			if (dialect != null) {
 				return dialect;
 			}
@@ -105,6 +111,12 @@ public class DialectDetector {
 			}
 			else if (dbName.startsWith("Oracle") && (dbMajorVersion >= 10)) {
 				dialect = new Oracle10gDialect();
+			}
+			else if (dbName.startsWith("Kingbase") ||dbName.startsWith("KingbaseES")) {
+	//			_log.warn("before KingbaseDialect，********：");
+				dialect =new Kingbase8MysqlDialect();
+	//			_log.warn("after Kingbase8MysqlDialect，********："+dialect.toString());
+				
 			}
 			else {
 				try (Connection connection = dataSource.getConnection()) {

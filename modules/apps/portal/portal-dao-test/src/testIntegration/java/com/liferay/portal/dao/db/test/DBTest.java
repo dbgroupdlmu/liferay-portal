@@ -63,7 +63,8 @@ public class DBTest {
 
 		Assume.assumeTrue(
 			(db.getDBType() != DBType.ORACLE) &&
-			(db.getDBType() != DBType.POSTGRESQL));
+			(db.getDBType() != DBType.POSTGRESQL) &&
+			(db.getDBType() != DBType.KINGBASE));
 	}
 
 	@BeforeClass

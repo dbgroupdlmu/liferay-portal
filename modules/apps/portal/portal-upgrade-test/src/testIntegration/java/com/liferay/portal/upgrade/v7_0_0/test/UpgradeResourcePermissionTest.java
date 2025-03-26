@@ -81,6 +81,11 @@ public class UpgradeResourcePermissionTest extends UpgradeResourcePermission {
 				expectedType = ExpectedType.PREFIX
 			),
 			@ExpectedLog(
+					expectedDBType = ExpectedDBType.KINGBASE,
+					expectedLog = "ERROR: relation ",
+					expectedType = ExpectedType.PREFIX
+				),
+			@ExpectedLog(
 				expectedDBType = ExpectedDBType.SYBASE,
 				expectedLog = "There is already an index on table 'ResourcePermission' named ",
 				expectedType = ExpectedType.PREFIX

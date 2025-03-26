@@ -5,8 +5,11 @@
 
 package com.liferay.portal.dao.sql.transformer;
 
+import com.liferay.portal.dao.db.DBManagerImpl;
 import com.liferay.portal.kernel.dao.db.DB;
 import com.liferay.portal.kernel.dao.db.DBType;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 /**
  * @author Manuel de la Peña
@@ -14,8 +17,12 @@ import com.liferay.portal.kernel.dao.db.DBType;
  */
 public class SQLTransformerFactory {
 
+	private static final Log _log = LogFactoryUtil.getLog(SQLTransformerFactory.class);
+
 	public static SQLTransformer getSQLTransformer(DB db) {
 		DBType dbType = db.getDBType();
+		
+		_log.warn("************dbtype is " +dbType);
 
 		SQLTransformerLogic sqlTransformerLogic = null;
 
@@ -33,6 +40,9 @@ public class SQLTransformerFactory {
 		}
 		else if (dbType == DBType.POSTGRESQL) {
 			sqlTransformerLogic = new PostgreSQLTransformerLogic(db);
+		}
+		else if (dbType == DBType.KINGBASE) {
+			sqlTransformerLogic = new KingbaseTransformerLogic(db);
 		}
 		else if (dbType == DBType.SQLSERVER) {
 			sqlTransformerLogic = new SQLServerSQLTransformerLogic(db);

@@ -51,7 +51,7 @@ public class ObjectDefinitionLocalServiceDBPartitionTest {
 		DBType dbType = DBManagerUtil.getDBType();
 
 		Assume.assumeTrue(
-			(dbType == DBType.MYSQL) || (dbType == DBType.POSTGRESQL));
+			(dbType == DBType.MYSQL) || (dbType == DBType.POSTGRESQL)|| (dbType == DBType.KINGBASE));
 
 		Assume.assumeTrue(DBPartition.isPartitionEnabled());
 	}

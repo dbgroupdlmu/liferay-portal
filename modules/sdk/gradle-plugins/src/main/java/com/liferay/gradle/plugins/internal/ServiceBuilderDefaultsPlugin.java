@@ -188,7 +188,7 @@ public class ServiceBuilderDefaultsPlugin
 				public void execute(BuildDBTask buildDBTask) {
 					buildDBTask.setDatabaseName("lportal");
 					buildDBTask.setDatabaseTypes(
-						"hypersonic", "mysql", "postgresql");
+						"hypersonic", "mysql", "postgresql", "kingbase");
 					buildDBTask.setDescription(
 						"Builds database SQL scripts from the generic SQL " +
 							"scripts.");

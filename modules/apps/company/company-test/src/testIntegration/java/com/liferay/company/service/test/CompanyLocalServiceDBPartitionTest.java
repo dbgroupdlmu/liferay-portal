@@ -829,11 +829,15 @@ public class CompanyLocalServiceDBPartitionTest
 	}
 
 	private int _getRulesCount(String partitionName) throws SQLException {
-		if (db.getDBType() != DBType.POSTGRESQL) {
+		if ((db.getDBType() != DBType.POSTGRESQL) && (db.getDBType() != DBType.KINGBASE)) {
 			return 0;
 		}
 
-		try (PreparedStatement preparedStatement = connection.prepareStatement(
+		try (
+				PreparedStatement preparedStatement;
+				if(db.getDBType() == DBType.POSTGRESQL)
+				{
+					preparedStatement = connection.prepareStatement(
 				StringBundler.concat(
 					"select count(pg_catalog.pg_rewrite.rulename) from ",
 					"pg_catalog.pg_rewrite join pg_catalog.pg_class on ",
@@ -842,6 +846,20 @@ public class CompanyLocalServiceDBPartitionTest
 					"'::regnamespace and (pg_catalog.pg_rewrite.rulename like ",
 					"'update_%' or pg_catalog.pg_rewrite.rulename like ",
 					"'delete_%')"));
+				}
+				else {
+					
+									
+					preparedStatement = connection.prepareStatement(
+							StringBundler.concat(
+								"select count(pg_catalog.pg_rewrite.rulename) from ",
+								"pg_catalog.pg_rewrite join pg_catalog.pg_class on ",
+								"pg_catalog.pg_rewrite.ev_class = pg_catalog.pg_class.oid ",
+								"where pg_catalog.pg_class.relnamespace = '", partitionName,
+								"'::regnamespace and (pg_catalog.pg_rewrite.rulename like ",
+								"'update_%' or pg_catalog.pg_rewrite.rulename like ",
+								"'delete_%')"));
+				}
 			ResultSet resultSet = preparedStatement.executeQuery()) {
 
 			resultSet.next();

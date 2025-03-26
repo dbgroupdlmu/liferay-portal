@@ -9,6 +9,10 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
+import com.liferay.portal.dao.jdbc.DataSourceFactoryImpl;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+
 /**
  * @author Brian Wing Shun Chan
  */
@@ -73,6 +77,7 @@ public class DBManagerUtil {
 	}
 
 	public static void setDB(DBType dbType, DataSource dataSource) {
+				
 		DBManager dbManager = _dbManager;
 
 		dbManager.setDB(dbManager.getDB(dbType, dataSource));
@@ -90,5 +95,5 @@ public class DBManagerUtil {
 	}
 
 	private static DBManager _dbManager;
-
+	
 }

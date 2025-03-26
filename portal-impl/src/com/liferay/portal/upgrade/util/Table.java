@@ -8,6 +8,7 @@ package com.liferay.portal.upgrade.util;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.dao.jdbc.postgresql.PostgreSQLJDBCUtil;
+import com.liferay.portal.dao.jdbc.kingbase.KingbaseJDBCUtil;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.db.DBType;
 import com.liferay.portal.kernel.dao.jdbc.AutoBatchPreparedStatementUtil;
@@ -368,6 +369,11 @@ public class Table {
 
 				value = PostgreSQLJDBCUtil.getLargeObject(resultSet, name);
 			}
+			else if (dbType.equals(DBType.KINGBASE) &&
+					KingbaseJDBCUtil.isKBStatement(resultSet.getStatement())) {
+
+					value = KingbaseJDBCUtil.getLargeObject(resultSet, name);
+				}
 			else {
 				value = resultSet.getBytes(name);
 			}
@@ -570,6 +576,10 @@ public class Table {
 
 			if (PostgreSQLJDBCUtil.isPGStatement(preparedStatement)) {
 				PostgreSQLJDBCUtil.setLargeObject(
+					preparedStatement, index, valueBytes);
+			}
+			else if (KingbaseJDBCUtil.isKBStatement(preparedStatement)) {
+				KingbaseJDBCUtil.setLargeObject(
 					preparedStatement, index, valueBytes);
 			}
 			else {

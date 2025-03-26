@@ -29,6 +29,13 @@ public class UpgradeSchema extends UpgradeProcess {
 				_upgradeSchemaPostgreSQL();
 			}
 		}
+		else if (DBManagerUtil.getDBType() == DBType.KINGBASE) {
+			try (LoggingTimer loggingTimer = new LoggingTimer(
+					"_upgradeSchemaKingbase")) {
+
+				_upgradeSchemaKingbase();
+			}
+		}
 		else {
 			try (LoggingTimer loggingTimer = new LoggingTimer(
 					"_upgradeSchemaDefault")) {
@@ -72,6 +79,24 @@ public class UpgradeSchema extends UpgradeProcess {
 	}
 
 	private void _upgradeSchemaPostgreSQL() throws Exception {
+		String[] sqls = {
+			"alter table JournalArticle add folderId LONG default 0",
+			//
+			"alter table JournalArticle alter column folderId drop default",
+			//
+			"alter table JournalArticle add treePath STRING default '/'",
+			//
+			"alter table JournalArticle alter column treePath drop default",
+			//
+			"alter table User_ add ldapServerId LONG default -1",
+			//
+			"alter table User_ alter column ldapServerId drop default"
+		};
+
+		runSQL(sqls);
+	}
+	
+	private void _upgradeSchemaKingbase() throws Exception {
 		String[] sqls = {
 			"alter table JournalArticle add folderId LONG default 0",
 			//

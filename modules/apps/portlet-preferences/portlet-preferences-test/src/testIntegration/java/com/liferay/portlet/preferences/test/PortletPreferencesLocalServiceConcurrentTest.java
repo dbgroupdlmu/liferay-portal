@@ -154,6 +154,16 @@ public class PortletPreferencesLocalServiceConcurrentTest {
 						expectedType = ExpectedType.CONTAINS
 					),
 					@ExpectedLog(
+							expectedDBType = ExpectedDBType.KINGBASE,
+							expectedLog = "Batch entry",
+							expectedType = ExpectedType.PREFIX
+						),
+						@ExpectedLog(
+							expectedDBType = ExpectedDBType.KINGBASE,
+							expectedLog = "duplicate key",
+							expectedType = ExpectedType.CONTAINS
+						),
+					@ExpectedLog(
 						expectedDBType = ExpectedDBType.SQLSERVER,
 						expectedLog = "Cannot insert duplicate key row",
 						expectedType = ExpectedType.PREFIX

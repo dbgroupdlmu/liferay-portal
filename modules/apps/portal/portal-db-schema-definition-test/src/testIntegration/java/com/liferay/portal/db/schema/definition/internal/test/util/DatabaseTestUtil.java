@@ -94,6 +94,9 @@ public class DatabaseTestUtil {
 		if (DBManagerUtil.getDBType() == DBType.MYSQL) {
 			return _getMySQLSchemaURL(schemaName);
 		}
+		else if (DBManagerUtil.getDBType() == DBType.KINGBASE) {
+			return _getKingbaseSchemaURL(schemaName);
+		}
 
 		return _getPostgreSQLSchemaURL(schemaName);
 	}
@@ -221,6 +224,18 @@ public class DatabaseTestUtil {
 	}
 
 	private static String _getPostgreSQLSchemaURL(String schemaName) {
+		String jdbcURL = PropsValues.JDBC_DEFAULT_URL;
+
+		int index = jdbcURL.indexOf("?");
+
+		if (index == -1) {
+			return jdbcURL + "?currentSchema=" + schemaName;
+		}
+
+		return jdbcURL + "&currentSchema=" + schemaName;
+	}
+	
+	private static String _getKingbaseSchemaURL(String schemaName) {
 		String jdbcURL = PropsValues.JDBC_DEFAULT_URL;
 
 		int index = jdbcURL.indexOf("?");

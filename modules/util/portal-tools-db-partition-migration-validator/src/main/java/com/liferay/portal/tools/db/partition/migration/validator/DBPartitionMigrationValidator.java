@@ -109,6 +109,9 @@ public class DBPartitionMigrationValidator {
 			if (DatabaseUtil.isPostgreSQL(jdbcURL)) {
 				Class.forName("org.postgresql.Driver");
 			}
+			else if (DatabaseUtil.isKingbase(jdbcURL)) {
+				Class.forName("com.kingbase8.Driver");
+			}
 			else {
 				Class.forName("com.mysql.cj.jdbc.Driver");
 			}

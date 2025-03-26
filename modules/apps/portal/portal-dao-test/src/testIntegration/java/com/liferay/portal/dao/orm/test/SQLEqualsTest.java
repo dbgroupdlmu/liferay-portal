@@ -152,7 +152,8 @@ public class SQLEqualsTest {
 
 		if (columnName.equals("typeBlob") &&
 			((DBManagerUtil.getDBType() == DBType.ORACLE) ||
-			 (DBManagerUtil.getDBType() == DBType.POSTGRESQL))) {
+			 (DBManagerUtil.getDBType() == DBType.POSTGRESQL)||
+			 (DBManagerUtil.getDBType() == DBType.KINGBASE))) {
 
 			return;
 		}

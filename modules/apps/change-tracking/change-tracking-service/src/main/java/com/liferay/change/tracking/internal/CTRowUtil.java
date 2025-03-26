@@ -36,7 +36,7 @@ public class CTRowUtil {
 		Map<String, Integer> tableColumnsMap =
 			ctPersistence.getTableColumnsMap();
 
-		if (_isPostgresBlobTable(tableColumnsMap)) {
+		if (_isPostgresBlobTable(tableColumnsMap)||_isKingbaseBlobTable(tableColumnsMap)) {
 			StringBundler sb = new StringBundler(
 				(3 * tableColumnsMap.size()) + 4);
 
@@ -210,6 +210,22 @@ public class CTRowUtil {
 		return false;
 	}
 
+	private static boolean _isKingbaseBlobTable(
+			Map<String, Integer> tableColumnsMap) {
+
+			if (DBManagerUtil.getDBType() != DBType.KINGBASE) {
+				return false;
+			}
+
+			Collection<Integer> values = tableColumnsMap.values();
+
+			if (values.contains(Types.BLOB)) {
+				return true;
+			}
+
+			return false;
+		}
+	
 	private CTRowUtil() {
 	}
 

@@ -122,6 +122,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.dao.jdbc.postgresql.PostgreSQLJDBCUtil;
+import com.liferay.portal.dao.jdbc.kingbase.KingbaseJDBCUtil;
 import com.liferay.portal.kernel.dao.db.DBManagerUtil;
 import com.liferay.portal.kernel.dao.db.DBType;
 import com.liferay.portal.kernel.dao.jdbc.AutoBatchPreparedStatementUtil;
@@ -4051,6 +4052,9 @@ public class ObjectEntryLocalServiceImpl
 				if (DBManagerUtil.getDBType() == DBType.POSTGRESQL) {
 					values.put(name, (String)object);
 				}
+				else if (DBManagerUtil.getDBType() == DBType.KINGBASE) {
+					values.put(name, (String)object);
+				}
 				else {
 					Clob clob = (Clob)object;
 
@@ -4209,6 +4213,10 @@ public class ObjectEntryLocalServiceImpl
 				PostgreSQLJDBCUtil.setLargeObject(
 					preparedStatement, index, (byte[])value);
 			}
+			else if (KingbaseJDBCUtil.isKBStatement(preparedStatement)) {
+				KingbaseJDBCUtil.setLargeObject(
+					preparedStatement, index, (byte[])value);
+			}
 			else {
 				preparedStatement.setBytes(index, (byte[])value);
 			}
@@ -4228,7 +4236,7 @@ public class ObjectEntryLocalServiceImpl
 			String valueString = String.valueOf(value);
 
 			if (valueString.isEmpty() ||
-				(DBManagerUtil.getDBType() == DBType.POSTGRESQL)) {
+				(DBManagerUtil.getDBType() == DBType.POSTGRESQL)||(DBManagerUtil.getDBType() == DBType.KINGBASE)) {
 
 				preparedStatement.setString(index, valueString);
 			}
