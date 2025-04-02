@@ -6,7 +6,7 @@
 package com.liferay.portal.dao.orm.hibernate;
 
 import org.hibernate.type.StandardBasicTypes;
-import org.hibernate.dialect.Kingbase8MysqlDialect;
+import org.hibernate.dialect.Kingbase8SqlserverDialect;
 import org.hibernate.dialect.pagination.AbstractLimitHandler;
 import org.hibernate.dialect.pagination.LimitHandler;
 import org.hibernate.dialect.pagination.LimitHelper;
@@ -15,7 +15,7 @@ import org.hibernate.engine.spi.RowSelection;
 /**
  * @author baimei
  */
-public class KingbaseDialect extends org.hibernate.dialect.Kingbase8MysqlDialect{
+public class KingbaseDialect extends org.hibernate.dialect.Kingbase8SqlserverDialect{
 	
 
 	}

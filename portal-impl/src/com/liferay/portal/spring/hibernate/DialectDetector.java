@@ -12,7 +12,7 @@ import com.liferay.portal.dao.jdbc.util.DBInfoUtil;
 import com.liferay.portal.dao.orm.hibernate.DB2Dialect;
 import com.liferay.portal.dao.orm.hibernate.HSQLDialect;
 import com.liferay.portal.dao.orm.hibernate.KingbaseDialect;
-import org.hibernate.dialect.Kingbase8MysqlDialect;
+import org.hibernate.dialect.Kingbase8SqlserverDialect;
 import com.liferay.portal.dao.orm.hibernate.MariaDBDialect;
 import com.liferay.portal.dao.orm.hibernate.Oracle10gDialect;
 import com.liferay.portal.dao.orm.hibernate.SQLServer2005Dialect;
@@ -114,8 +114,8 @@ public class DialectDetector {
 			}
 			else if (dbName.startsWith("Kingbase") ||dbName.startsWith("KingbaseES")) {
 	//			_log.warn("before KingbaseDialect，********：");
-				dialect =new Kingbase8MysqlDialect();
-	//			_log.warn("after Kingbase8MysqlDialect，********："+dialect.toString());
+				dialect =new Kingbase8SqlserverDialect();
+	//			_log.warn("after Kingbase8SqlserverDialect********："+dialect.toString());
 				
 			}
 			else {

@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 import org.hibernate.dialect.DB2Dialect;
 import org.hibernate.dialect.Dialect;
 import org.hibernate.dialect.HSQLDialect;
-import org.hibernate.dialect.Kingbase8MysqlDialect;
+import org.hibernate.dialect.Kingbase8SqlserverDialect;
 import org.hibernate.dialect.MySQLDialect;
 import org.hibernate.dialect.Oracle8iDialect;
 import org.hibernate.dialect.Oracle9Dialect;
@@ -195,7 +195,7 @@ public class DBManagerImpl implements DBManager {
 
 			return DBType.ORACLE;
 		}
-		if (dialect instanceof Kingbase8MysqlDialect || dialect instanceof KingbaseDialect) {
+		if (dialect instanceof Kingbase8SqlserverDialect || dialect instanceof KingbaseDialect) {
 
 	//		_log.warn( "******************dialect type is kingbase " + dialect);
 

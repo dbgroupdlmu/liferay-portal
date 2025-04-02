@@ -490,12 +490,18 @@ public class KingbaseDB extends BaseDB {
 		runSQL(connection, sb.toString());
 	}
 
+//	private static final String[] _Kingbase = {
+//		"--", "true", "false", "'01/01/1970'", "GETDATE()", "binary",
+//		" bytea", " decimal(30, 16)", " bool", " datetime2",
+//		" double precision", " integer", " bigint", " text", " text",
+//		" varchar", "", "commit"
+//	};
 	private static final String[] _Kingbase = {
-		"--", "true", "false", "'01/01/1970'", "current_timestamp", " oid",
-		" bytea", " decimal(30, 16)", " bool", " timestamp",
-		" double precision", " integer", " bigint", " text", " text",
-		" varchar", "", "commit"
-	};
+			"--", "1", "0", "'19700101'", "GetDate()", " image", " image",
+			" decimal(30, 16)", " bit", " datetime2(6)", " float", " int",
+			" bigint", " nvarchar(4000)", " nvarchar(max)", " nvarchar",
+			"  identity(1,1)", "go"
+		};
 
 	private static final int[] _SQL_TYPES = {
 		Types.BIGINT, Types.BINARY, Types.NUMERIC, Types.BIT, Types.TIMESTAMP,
