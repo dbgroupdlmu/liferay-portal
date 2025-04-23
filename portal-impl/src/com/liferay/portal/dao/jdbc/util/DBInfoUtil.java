@@ -33,11 +33,14 @@ public class DBInfoUtil {
 		}
 
 		DBInfo dbInfo = _dbInfos.get(dataSource);
+		
+		
 
 		if (dbInfo == null) {
 			dbInfo = _createDBInfo(dataSource);
 
 			_dbInfos.put(dataSource, dbInfo);
+			
 		}
 
 		return dbInfo;
