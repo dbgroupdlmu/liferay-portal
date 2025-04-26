@@ -9,10 +9,6 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
-import com.liferay.portal.dao.jdbc.DataSourceFactoryImpl;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-
 /**
  * @author Brian Wing Shun Chan
  */
